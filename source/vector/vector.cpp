@@ -39,4 +39,17 @@ namespace geometry
     {
         return (equal_eps(vec.x/x, vec.y/y) && equal_eps(vec.y/y, vec.z/z));
     }
-}
+    
+    inline double Vector_t::operator*  (const Vector_t& rhs)
+    {
+        return (x * rhs.x + y * rhs.y + z * rhs.z);
+    }
+
+    inline Vector_t Vector_t::operator%  (const Vector_t& rhs)
+    {
+        return (Vector_t {y * rhs.z - z * rhs.y, 
+                        -(x * rhs.z - z * rhs.x), 
+                          x * rhs.y - y * rhs.x});
+    }
+
+} //geometry

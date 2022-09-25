@@ -10,4 +10,4 @@ inline bool Point_t::operator== (const Point_t& rhs) const
     return (equal_eps (x, rhs.x) && equal_eps (y, rhs.y) && equal_eps (z, rhs.z));
 }
 
-}
+} //geometry
