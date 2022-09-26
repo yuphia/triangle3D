@@ -1,10 +1,14 @@
 #pragma once
 
 #include <cmath>
-#include "vector/vector.hpp"
 
 namespace geometry
 {
+
+class Point_t;
+class Vector_t;
+class Line_t;
+class Plane_t;
 
 const double EPS = 10e-9;
 

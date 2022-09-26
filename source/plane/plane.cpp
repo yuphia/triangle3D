@@ -1,15 +1,14 @@
-#include "plane/plane.hpp"   
 #include <cmath> 
+#include "plane/plane.hpp"   
     
     
 namespace geometry
 {
 
-    Plane_t::Plane_t (const Point_t& pt1, const Vector_t& vec1, const Point_t& vec2) {
-        Vector_t n = cross (vec1, vec2);
+    Plane_t::Plane_t (const Point_t& pt1, const Vector_t& vec1, const Vector_t& vec2) {
+        Vector_t n = vec1 % vec2;
         normal = n.normalize();
-
-        d = dot (-normal, Vector_t (pt1));
+        d = (-normal) * Vector_t (pt1);
     }
 
     Plane_t::Plane_t (const Point_t& pt, const Line_t& line) {
@@ -17,12 +16,12 @@ namespace geometry
     }
 
     Plane_t::Plane_t (const Point_t& pt1, const Point_t& pt2, const Point_t& pt3) {
-        Plane_t (p1, Vector_t(p2) - Vector_t(p1), Vector_t(p3) - Vector_t(p1));
+        Plane_t (pt1, Vector_t(pt2) - Vector_t(pt1), Vector_t(pt3) - Vector_t(pt1));
     }
 
     Plane_t::Plane_t (const Point_t& pt, const Vector_t& n) {
         normal = n.normalize();
-        d = dot (-normal, Vector_t (pt));
+        d = (-normal) * Vector_t (pt);
     }
 
     Plane_t::Plane_t (const double A, const double B, const double C, const double D) {
@@ -32,11 +31,11 @@ namespace geometry
         d = D / sqrt (sqr(A) + sqr(B) + sqr(C));
     }
 
-    inline bool Plane_t::operator|| (const Plane_t& rhs) const {
-        return (rhs.n == n);
+    bool Plane_t::operator| (const Plane_t& rhs) const {
+        return (rhs.normal == normal);
     }
 
-    inline bool Plane_t::operator== (const Plane_t& rhs) const {
+    bool Plane_t::operator== (const Plane_t& rhs) const {
         return ((normal == rhs.normal) && (d == rhs.d));
     }
 
