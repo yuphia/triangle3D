@@ -1,7 +1,6 @@
 #pragma once
 
 #include "vector/vector.hpp"
-#include "point/point.hpp"
 
 namespace geometry
 {
