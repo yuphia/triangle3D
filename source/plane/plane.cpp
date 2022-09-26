@@ -40,4 +40,4 @@ namespace geometry
         return ((normal == rhs.normal) && (d == rhs.d));
     }
 
-}
+}//geometry

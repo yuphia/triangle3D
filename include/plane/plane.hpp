@@ -17,7 +17,10 @@ public:
     Plane_t (const Point_t& pt1, const Point_t& pt2, const Point_t& pt3);
     Plane_t (const Point_t& pt, const Vector_t& n);
     Plane_t (const double A, const double B, const double C, const double D);
+  //Plane_t (const Triangle_t& triangle); ???
 
+    inline bool Plane_t::operator|| (const Plane_t& rhs) const;
+    inline bool Plane_t::operator== (const Plane_t& rhs) const;
 }
 
-}
+}//geometry
