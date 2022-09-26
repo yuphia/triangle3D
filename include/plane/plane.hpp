@@ -25,4 +25,4 @@ public:
     bool operator| (const Plane_t& rhs) const;
 };
 
-}
+}//geometry
