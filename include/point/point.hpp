@@ -11,10 +11,14 @@ class Point_t
 {
 public:
     double x, y, z = std::numeric_limits<double>::quiet_NaN();
+    
+    Degeneracy_t degeneracy = Degeneracy_t::POIZON;
+
 
     Point_t (const double x_, const double y_, const double z_);
 
-    inline bool operator== (const Point_t& rhs) const;
+
+    bool operator== (const Point_t& rhs) const;
 };
 
 }

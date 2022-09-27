@@ -11,6 +11,8 @@ public:
     Vector_t direction_vec;
     Vector_t point_on_line;
 
+    Degeneracy_t degeneracy = Degeneracy_t::POIZON;
+
     Line_t (const Point_t& a, const Point_t& b);
     Line_t (const Point_t& point_on_line_, const Vector_t& direction_vec_);
     Line_t (const Vector_t& point_on_line_, const Vector_t& direction_vec_);
