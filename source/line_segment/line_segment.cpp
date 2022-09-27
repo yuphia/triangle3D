@@ -4,12 +4,21 @@
 namespace geometry 
 {
 
-    Line_segment_t::Line_segment_t (const Line_t& l, const double t1, const double t2) {
+    Line_segment_t::Line_segment_t (const Line_t& l, const double t1, const double t2) : 
+                                                                                         line{l.point_on_line, l.direction_vec}
+    {
+        if ( line.degeneracy == Degeneracy_t::INVALID || std::isnan(t1) || std::isnan(t2) )
+            degeneracy = Degeneracy_t::INVALID;
+        else if (line.degeneracy == Degeneracy_t::POINT)
+            degeneracy = Degeneracy_t::POINT; //handle as a point using line.point as a product of degeneration
+        else
+            degeneracy = Degeneracy_t::NONE;
         
         if (equal_eps (t1, t2)) {
             t_min = t1;
             t_max = t2;
-            //degenerate to point
+            degeneracy = Degeneracy_t::POINT_ON_LINE; //handle as a point using ->  <point> := <point_on_line> + <t_min> * <direction_vec>
+                                                      // а вообще можно забить на это хуй
         }
         else if (t1 < t2) {
             t_min = t1;
@@ -19,9 +28,6 @@ namespace geometry
             t_min = t2;
             t_max = t1;
         }
-
-        line.point_on_line = l.point_on_line;
-        line.direction_vec = l.direction_vec;
     }
 
     bool Line_segment_t::operator^ (const Line_segment_t& rhs) {

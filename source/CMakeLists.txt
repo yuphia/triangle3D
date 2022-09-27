@@ -4,6 +4,8 @@ set(
     point
     vector
     plane
+    line_segment
+    triangle
 )
 
 foreach(LIB ${LIBS})

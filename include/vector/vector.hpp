@@ -14,6 +14,8 @@ public:
     double y = std::numeric_limits<double>::quiet_NaN(); 
     double z = std::numeric_limits<double>::quiet_NaN();
 
+    Degeneracy_t degeneracy = Degeneracy_t::POIZON;
+
     Vector_t (const double x_, const double y_, const double z_);
     Vector_t (const Point_t& point);
 
