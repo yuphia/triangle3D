@@ -49,7 +49,7 @@ WARNS
 -Wsuggest-final-types
 -Wsuggest-override
 -Wswitch-default
--Wswitch-enum
+#-Wswitch-enum
 -Wsync-nand
 -Wundef
 -Wunreachable-code

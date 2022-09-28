@@ -13,7 +13,7 @@ namespace geometry
         else
             degeneracy = Degeneracy_t::NONE;
         
-        d = (-normal) * Vector_t (pt);
+        d = normal * Vector_t (pt);
     }
 
     Plane_t::Plane_t (const Point_t& pt, const Line_t& line) : 
@@ -24,7 +24,7 @@ namespace geometry
         else
             degeneracy = Degeneracy_t::NONE;
 
-        d = (-normal) * Vector_t (pt);
+        d = normal * Vector_t (pt);
     }
 
     Plane_t::Plane_t (const Point_t& pt1, const Point_t& pt2, const Point_t& pt3) : 
@@ -35,7 +35,7 @@ namespace geometry
         else
             degeneracy = Degeneracy_t::NONE;
 
-        d = (-normal) * Vector_t (pt1);
+        d = normal * Vector_t (pt1);
     }
 
     Plane_t::Plane_t (const Point_t& pt, const Vector_t& n) : 
@@ -46,7 +46,7 @@ namespace geometry
         else
             degeneracy = Degeneracy_t::NONE;
 
-        d = (-normal) * Vector_t (pt);
+        d = normal * Vector_t (pt);
     }
     
     Plane_t::Plane_t (const double A, const double B, const double C, const double D) :
@@ -58,7 +58,7 @@ namespace geometry
         else
             degeneracy = Degeneracy_t::NONE;
         
-        d = D / sqrt (sqr(A) + sqr(B) + sqr(C));
+        d = -(D / sqrt (sqr(A) + sqr(B) + sqr(C)));
     }
 
     bool Plane_t::operator| (const Plane_t& rhs) const {
