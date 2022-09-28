@@ -1,0 +1,1 @@
+add_executable(degeneration_test degeneration_test.cpp)

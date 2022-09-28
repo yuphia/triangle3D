@@ -1,0 +1,1 @@
+add_executable(2D_algorithm_test 2D_algorithm_test.cpp)
