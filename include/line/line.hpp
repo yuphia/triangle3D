@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vector/vector.hpp"
+#include "line_segment/line_segment.hpp"
 
 namespace geometry
 {
@@ -13,7 +14,8 @@ public:
 
     Degeneracy_t degeneracy = Degeneracy_t::POIZON;
 
-    Line_t (const Point_t& a, const Point_t& b);
+    Line_t (const Point_t& p0, const Point_t& p1);
+    Line_t (const Line_segment_t& segment);
     Line_t (const Point_t& point_on_line_, const Vector_t& direction_vec_);
     Line_t (const Vector_t& point_on_line_, const Vector_t& direction_vec_);
 

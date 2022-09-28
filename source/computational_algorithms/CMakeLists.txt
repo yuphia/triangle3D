@@ -1,0 +1,1 @@
+add_library(computational_algorithms computational_algorithms.cpp)

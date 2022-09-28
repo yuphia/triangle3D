@@ -51,7 +51,12 @@ namespace geometry
         
         return (equal_eps(vec.x/x, vec.y/y) && equal_eps(vec.y/y, vec.z/z)); // check if zero
     }
-    
+
+    Vector_t Vector_t::operator* (const double rhs) const 
+    {
+        return Vector_t{x * rhs, y * rhs, z * rhs};
+    }
+
     double Vector_t::operator*  (const Vector_t& rhs) const 
     {
         return (x * rhs.x + y * rhs.y + z * rhs.z);
@@ -64,12 +69,17 @@ namespace geometry
                           x * rhs.y - y * rhs.x});
     }
 
+    double Vector_t::squared_length() const 
+    {
+        return (sqr (x) + sqr (y) + sqr (z));
+    }
+
     Vector_t Vector_t::normalize()
     {
         if (degeneracy == Degeneracy_t::INVALID || degeneracy == Degeneracy_t::NULL_VECTOR)
             return *this;
         
-        double norm = sqrt (sqr (x) + sqr (y) + sqr (z));
+        const double norm = sqrt (squared_length());
         Vector_t retVal {x/norm, y/norm, z/norm};
         return retVal;
     }

@@ -9,7 +9,7 @@ namespace geometry
 class Vector_t
 {
 public:
-    double length = std::numeric_limits<double>::quiet_NaN();
+    //double length = std::numeric_limits<double>::quiet_NaN();
     double x = std::numeric_limits<double>::quiet_NaN();
     double y = std::numeric_limits<double>::quiet_NaN(); 
     double z = std::numeric_limits<double>::quiet_NaN();
@@ -24,10 +24,13 @@ public:
     Vector_t operator-  (const Vector_t& rhs) const;
     Vector_t operator-  () const;
 
+    Vector_t operator*  (const double    rhs) const;
     double   operator*  (const Vector_t& rhs) const; 
     Vector_t operator%  (const Vector_t& rhs) const; 
 
+    double squared_length() const;
     Vector_t normalize();
+
     bool is_collinear_to (const Vector_t& vec) const;
 };
 

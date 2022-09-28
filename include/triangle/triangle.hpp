@@ -1,3 +1,4 @@
+#include <vector>
 #include "point/point.hpp"
 #include "vector/vector.hpp"
 
@@ -9,7 +10,8 @@ class Triangle_t
 {
 
 public:
-    Point_t p0, p1, p2;
+    std::vector<Point_t> points;
+    const size_t nVertices = 3;
 
     Degeneracy_t degeneracy = Degeneracy_t::POIZON;
     
