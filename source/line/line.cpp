@@ -32,7 +32,7 @@ namespace geometry
             degeneracy = Degeneracy_t::NONE;
     }
 
-    Line_t::Line_t (const Point_t& direction_vec_, const Vector_t& point_on_line_) :
+    Line_t::Line_t (const Vector_t& direction_vec_, const Point_t& point_on_line_) :
                                                                                     direction_vec{direction_vec_},
                                                                                     point_on_line{point_on_line_}
     {
