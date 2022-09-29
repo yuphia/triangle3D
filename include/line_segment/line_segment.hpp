@@ -16,6 +16,10 @@ public:
 
 
     Line_segment_t (const Point_t& p0_, const Point_t& p1_);
+    Line_segment_t ()
+    {
+        degeneracy = Degeneracy_t::INVALID;
+    }
 
     //bool operator^ (const Line_segment_t& rhs);
 };
