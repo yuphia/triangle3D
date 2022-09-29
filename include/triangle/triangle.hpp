@@ -16,7 +16,10 @@ public:
     Degeneracy_t degeneracy = Degeneracy_t::POIZON;
     
     Triangle_t (const Point_t& p0_, const Point_t& p1_, const Point_t& p3_);
-    Triangle_t (){};
+    Triangle_t ()
+    {
+        degeneracy = Degeneracy_t::INVALID;
+    };
 
     bool operator== (const Triangle_t& rhs) const;
 };

@@ -26,6 +26,7 @@ TEST (constructorTesting, test)
     t2.points.push_back(p2);
 
     EXPECT_EQ (t, t2);
+    EXPECT_EQ (t.degeneracy, Degeneracy_t::NONE);
 }
 
 TEST (constructorTesting, testDegeneracyToPoint)
@@ -50,8 +51,6 @@ TEST (constructorTesting, testDegeneracyToLineSegment1)
     EXPECT_EQ (t.degeneracy, Degeneracy_t::LINE_SEGMENT);
 }
 
-
-
 TEST (constructorTesting, testDegeneracyToLineSegment2)
 {
     Point_t p0 {1, 2, 3};
@@ -74,6 +73,11 @@ TEST (constructorTesting, testDegeneracyToLineSegment3)
     EXPECT_EQ (t.degeneracy, Degeneracy_t::LINE_SEGMENT);
 }
 
+TEST (constructorTesting, testDefaultConstructorDegeneracy)
+{
+    Triangle_t t;
+    EXPECT_EQ (t.degeneracy, Degeneracy_t::INVALID);
+}
 
 }
 }

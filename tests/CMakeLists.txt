@@ -12,6 +12,4 @@ endforeach()
 list(APPEND TESTS ${CLASS_TESTS})
 list(APPEND TESTS common_test)
 
-message (STATUS "${TESTS}")
-
 set(TESTS "${TESTS}" PARENT_SCOPE)

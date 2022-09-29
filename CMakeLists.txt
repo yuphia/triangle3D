@@ -93,7 +93,13 @@ FLAGS
 )
 
 add_subdirectory(source)
-message (STATUS "Collected SOURCE: ${LIBS}")
+
+message (STATUS "\n////////////////")
+message (STATUS "Collected LIBS:")
+foreach(LIB ${LIBS})
+    message (STATUS "   ${LIB}")
+endforeach()
+message (STATUS "")
 
 foreach(LIB ${LIBS})
     message (STATUS "lib: ${LIB}")
@@ -110,8 +116,9 @@ foreach(LIB ${LIBS})
     
     get_property(dirs TARGET ${LIB} PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
     foreach(dir ${dirs})
-        message(STATUS "${LIB} includes dir = '${dir}'")    
+        message(STATUS "    ${LIB} includes dir = '${dir}'")    
     endforeach()
+    message (STATUS "")
 endforeach()
 
 
@@ -119,10 +126,17 @@ foreach(LIB ${LIBS})
     foreach(LIB_TO_LINK ${LIBS})
         if (NOT ${LIB} STREQUAL ${LIB_TO_LINK})
             target_link_libraries(${LIB} PRIVATE ${LIB_TO_LINK})
-        endif()
+            endif()
     endforeach()
+
+    get_target_property(OUT ${LIB} LINK_LIBRARIES)
     
-    
+    message(STATUS "TO LIB: ${LIB}")
+
+    foreach(LIB_MESSAGE ${OUT})
+        message(STATUS "    linked: ${LIB_MESSAGE}")
+    endforeach()
+    message(STATUS "")        
 endforeach()
 
 #add_subdirectory(apps)
@@ -151,7 +165,14 @@ enable_testing()
 find_package (GTest REQUIRED)
 
 add_subdirectory(tests)
-message (STATUS "Collected TESTS: ${TESTS}")
+
+message (STATUS "\n////////////////")
+message (STATUS "Collected TESTS:")
+foreach(TEST ${TESTS})
+    message (STATUS "   ${TEST}")
+endforeach()
+message (STATUS "")
+
 
 foreach (TEST ${TESTS})
     message (STATUS "tests: ${TEST}")
@@ -168,8 +189,9 @@ foreach (TEST ${TESTS})
     get_target_property(OUT ${TEST} LINK_LIBRARIES)
     
     foreach(LIB ${OUT})
-        message(STATUS "linked: ${LIB}")
+        message(STATUS "    linked: ${LIB}")
     endforeach()
     
+    message(STATUS "")
 
 endforeach ()

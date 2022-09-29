@@ -18,7 +18,10 @@ public:
 
     Vector_t (const double x_, const double y_, const double z_);
     Vector_t (const Point_t& point);
-    Vector_t (){};
+    Vector_t ()
+    {
+        degeneracy = Degeneracy_t::INVALID;
+    };
 
     bool     operator== (const Vector_t& rhs) const;
     Vector_t operator+  (const Vector_t& rhs) const;

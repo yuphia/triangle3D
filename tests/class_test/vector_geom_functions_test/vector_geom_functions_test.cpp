@@ -9,55 +9,39 @@ namespace testing
 namespace vector_testing
 {
 
-namespace constructorTest
+namespace constructor_testing
 {
 
-TEST (constructorTests, degeneracyTest1)
-{
-    Vector_t vec {1, 1, 1};
-    EXPECT_EQ (vec.degeneracy, Degeneracy_t::NONE);
-}
-
-TEST(constructorTests, pointConstr)
+TEST(constructorTesting, pointConstr)
 {
     Point_t test_point {1, 2, 3};
     Vector_t vec {test_point};
     Vector_t eq {1, 2, 3};
 
     EXPECT_EQ (vec, eq);
+    EXPECT_EQ (vec.degeneracy, Degeneracy_t::NONE);
 }
 
-TEST(constructorTests, threeDoubleConstrX)
+TEST(constructorTesting, threeDoubleConstr)
 {
     Vector_t vec {1, 2, 3};
-    Vector_t eq;
-    eq.x = 1;
-
-    EXPECT_EQ (vec.x, eq.x);
+    
+    EXPECT_EQ (vec.x, 1);
+    EXPECT_EQ (vec.y, 2);
+    EXPECT_EQ (vec.z, 3);    
+    EXPECT_EQ (vec.degeneracy, Degeneracy_t::NONE);
 }
 
-TEST(constructorTests, threeDoubleConstrY)
-{
-    Vector_t vec {1, 2, 3};
-    Vector_t eq;
-    eq.y = 2;
-
-    EXPECT_EQ (vec.y, eq.y);
-}
-
-TEST(constructorTests, threeDoubleConstrZ)
-{
-    Vector_t vec {1, 2, 3};
-    Vector_t eq;
-    eq.z = 3;
-
-    EXPECT_EQ (vec.z, eq.z);
-}
-
-TEST(constructorTests, nullVectorDegeneracy)
+TEST(constructorTesting, nullVectorDegeneracy)
 {
     Vector_t vec {0, 0, 0};
     EXPECT_EQ (vec.degeneracy, Degeneracy_t::NULL_VECTOR);
+}
+
+TEST(constructorTesting, defaultConstructorDegenracy)
+{
+    Vector_t vec;
+    EXPECT_EQ (vec.degeneracy, Degeneracy_t::INVALID);
 }
 
 }

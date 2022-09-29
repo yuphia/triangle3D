@@ -10,13 +10,18 @@ namespace geometry
 class Point_t
 {
 public:
-    double x, y, z = std::numeric_limits<double>::quiet_NaN();
+    double x = std::numeric_limits<double>::quiet_NaN();
+    double y = std::numeric_limits<double>::quiet_NaN();
+    double z = std::numeric_limits<double>::quiet_NaN();
     
     Degeneracy_t degeneracy = Degeneracy_t::POIZON;
 
 
     Point_t (const double x_, const double y_, const double z_);
-    Point_t (){};
+    Point_t ()
+    {
+        degeneracy = Degeneracy_t::INVALID;
+    };
 
 
     bool operator== (const Point_t& rhs) const;
