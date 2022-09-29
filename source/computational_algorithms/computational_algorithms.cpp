@@ -273,6 +273,7 @@ bool is_intersection_line_segments (const Line_segment_t& seg0, const Line_segme
 
     double det = a*c - b*b;
     
+    //lev pawol nah
     if (equal_eps(det, 0.0)) {  // надо тестить, потому что мне показалось, что алгосв книжке неправильный -> я его поменял
         s = 0.0;
         
