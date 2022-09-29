@@ -1,12 +1,17 @@
 set(
     TEST_DIRS
     algorithm_test
-    vector_functions_test
+    class_test
+    common_test
 )
 
 foreach(TEST_DIR ${TEST_DIRS})
     add_subdirectory(${TEST_DIR})
 endforeach()
 
-list(APPEND TESTS vector_functions_test)
+list(APPEND TESTS ${CLASS_TESTS})
+list(APPEND TESTS common_test)
+
+message (STATUS "${TESTS}")
+
 set(TESTS "${TESTS}" PARENT_SCOPE)

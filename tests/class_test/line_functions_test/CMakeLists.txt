@@ -1,0 +1,1 @@
+add_executable(line_functions_test line_functions_test.cpp)

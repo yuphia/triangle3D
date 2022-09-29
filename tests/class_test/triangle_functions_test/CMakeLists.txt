@@ -1,0 +1,1 @@
+add_executable(triangle_functions_test triangle_functions_test.cpp)

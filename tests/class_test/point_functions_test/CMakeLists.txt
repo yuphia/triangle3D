@@ -1,0 +1,1 @@
+add_executable (point_functions_test point_functions_test.cpp)

@@ -150,6 +150,9 @@ foreach (TEST ${TESTS})
 
     target_include_directories(${TEST} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
     target_link_libraries (${TEST} PRIVATE ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
-    target_link_libraries (${LIBS})
+    target_link_libraries (${TEST} PRIVATE ${LIBS})
+
+    get_target_property(OUT ${TEST} LINK_LIBRARIES)
+    message(STATUS "linked: ${OUT}")
 
 endforeach ()

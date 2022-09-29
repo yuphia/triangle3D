@@ -1,4 +1,5 @@
 #include "vector/vector.hpp"
+#include <iostream>
 
 namespace geometry
 {
@@ -48,8 +49,10 @@ namespace geometry
     {
         if (degeneracy == Degeneracy_t::NULL_VECTOR || vec.degeneracy == Degeneracy_t::NULL_VECTOR)
             return true; 
-        
-        return (equal_eps(vec.x/x, vec.y/y) && equal_eps(vec.y/y, vec.z/z)); // check if zero
+
+        bool i = (equal_eps(vec.x/x, vec.y/y) && equal_eps(vec.y/y, vec.z/z)); // check if zero
+
+        return i;
     }
 
     Vector_t Vector_t::operator* (const double rhs) const 
@@ -74,7 +77,7 @@ namespace geometry
         return (sqr (x) + sqr (y) + sqr (z));
     }
 
-    Vector_t Vector_t::normalize()
+    Vector_t Vector_t::normalize() const
     {
         if (degeneracy == Degeneracy_t::INVALID || degeneracy == Degeneracy_t::NULL_VECTOR)
             return *this;
@@ -83,4 +86,5 @@ namespace geometry
         Vector_t retVal {x/norm, y/norm, z/norm};
         return retVal;
     }
+    
 } //geometry

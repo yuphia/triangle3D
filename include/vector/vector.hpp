@@ -18,6 +18,7 @@ public:
 
     Vector_t (const double x_, const double y_, const double z_);
     Vector_t (const Point_t& point);
+    Vector_t (){};
 
     bool     operator== (const Vector_t& rhs) const;
     Vector_t operator+  (const Vector_t& rhs) const;
@@ -29,7 +30,7 @@ public:
     Vector_t operator%  (const Vector_t& rhs) const; 
 
     double squared_length() const;
-    Vector_t normalize();
+    Vector_t normalize() const;
 
     bool is_collinear_to (const Vector_t& vec) const;
 };
