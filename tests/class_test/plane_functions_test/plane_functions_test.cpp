@@ -45,7 +45,7 @@ TEST (constructorTesting, constructor3PointsToLine)
 
     EXPECT_EQ (plane.normal, vec);
     EXPECT_EQ (plane.d, 0);
-    EXPECT_EQ (plane.degeneracy, Degeneracy_t::LINE);
+    EXPECT_EQ (plane.degeneracy, Degeneracy_t::INVALID);
 }
 
 TEST (constructorTesting, constructor3PointsToPoint)
@@ -60,7 +60,7 @@ TEST (constructorTesting, constructor3PointsToPoint)
 
     EXPECT_EQ (plane.normal, vec);
     EXPECT_EQ (plane.d, 0);
-    EXPECT_EQ (plane.degeneracy, Degeneracy_t::POINT);
+    EXPECT_EQ (plane.degeneracy, Degeneracy_t::INVALID);
 }
 
 TEST (constructorTesting, constructorByCoeffs)
