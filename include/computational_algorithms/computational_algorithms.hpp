@@ -1,7 +1,7 @@
 #pragma once
 
 #include "point/point.hpp"
-#include "vector/vector.hpp"
+#include "vector_geom/vector_geom.hpp"
 #include "line/line.hpp"
 #include "line_segment/line_segment.hpp"
 #include "plane/plane.hpp"

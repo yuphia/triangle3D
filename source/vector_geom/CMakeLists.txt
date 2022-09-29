@@ -1,0 +1,1 @@
+add_library(vector_geom vector_geom.cpp)

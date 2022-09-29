@@ -106,10 +106,23 @@ foreach(LIB ${LIBS})
     target_include_directories(${LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
     #    target_link_libraries(${LIB} PUBLIC )
 
+
+    
     get_property(dirs TARGET ${LIB} PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
     foreach(dir ${dirs})
         message(STATUS "${LIB} includes dir = '${dir}'")    
     endforeach()
+endforeach()
+
+
+foreach(LIB ${LIBS})
+    foreach(LIB_TO_LINK ${LIBS})
+        if (NOT ${LIB} STREQUAL ${LIB_TO_LINK})
+            target_link_libraries(${LIB} PRIVATE ${LIB_TO_LINK})
+        endif()
+    endforeach()
+    
+    
 endforeach()
 
 #add_subdirectory(apps)
@@ -153,6 +166,10 @@ foreach (TEST ${TESTS})
     target_link_libraries (${TEST} PRIVATE ${LIBS})
 
     get_target_property(OUT ${TEST} LINK_LIBRARIES)
-    message(STATUS "linked: ${OUT}")
+    
+    foreach(LIB ${OUT})
+        message(STATUS "linked: ${LIB}")
+    endforeach()
+    
 
 endforeach ()

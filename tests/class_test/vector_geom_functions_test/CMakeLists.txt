@@ -1,0 +1,1 @@
+add_executable(vector_geom_functions_test vector_geom_functions_test.cpp)

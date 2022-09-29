@@ -2,7 +2,7 @@ set(
     LIBS
     line
     point
-    vector
+    vector_geom
     plane
     line_segment
     triangle

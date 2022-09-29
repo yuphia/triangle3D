@@ -20,7 +20,7 @@ namespace geometry
     }
 
 
-    inline bool Triangle_t::operator == (const Triangle_t& rhs) const {
+    bool Triangle_t::operator == (const Triangle_t& rhs) const {
         return ((points[0] == rhs.points[0]) && (points[1] == rhs.points[1]) && (points[2] == rhs.points[2]));
     }
     

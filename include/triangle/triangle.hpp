@@ -1,6 +1,6 @@
 #include <vector>
 #include "point/point.hpp"
-#include "vector/vector.hpp"
+#include "vector_geom/vector_geom.hpp"
 
 
 namespace geometry
@@ -16,8 +16,9 @@ public:
     Degeneracy_t degeneracy = Degeneracy_t::POIZON;
     
     Triangle_t (const Point_t& p0_, const Point_t& p1_, const Point_t& p3_);
+    Triangle_t (){};
 
-    inline bool operator== (const Triangle_t& rhs) const;
+    bool operator== (const Triangle_t& rhs) const;
 };
 
 } // geometry

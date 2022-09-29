@@ -1,5 +1,5 @@
 #include "common_math_operations/common_math_operations.hpp"
-#include "vector/vector.hpp"
+#include "vector_geom/vector_geom.hpp"
 #include "gtest/gtest.h"
 
 namespace geometry

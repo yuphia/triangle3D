@@ -1,6 +1,6 @@
 set (
     TESTS
-    vector_functions_test
+    vector_geom_functions_test
     triangle_functions_test
     point_functions_test
     plane_functions_test

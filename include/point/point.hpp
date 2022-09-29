@@ -16,6 +16,7 @@ public:
 
 
     Point_t (const double x_, const double y_, const double z_);
+    Point_t (){};
 
 
     bool operator== (const Point_t& rhs) const;
