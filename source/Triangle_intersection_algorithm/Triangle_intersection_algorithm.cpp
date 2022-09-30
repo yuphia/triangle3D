@@ -33,17 +33,17 @@ double point_on_line_projection_coeff (const Point_t& point, const Line_t& line)
 }
 
 // can be templated on polygon, if triangle_t -> part of polygon_t
-void compute_triangle_on_line_projection_interval (const Triangle_t& triangle, const Line_t& line, double* min, double* max) {
+void compute_triangle_on_line_projection_interval (const Triangle_t& triangle, const Line_t& line, double& min, double& max) {
     
-    *min = *max = point_on_line_projection_coeff (triangle.points[0], line);
-    double term = *min;
+    min = max = point_on_line_projection_coeff (triangle.points[0], line);
+    double term = min;
     
     for (size_t i = 1; i < triangle.nVertices; i++) {
         term = point_on_line_projection_coeff (triangle.points[i], line);
-        if ( term < (*min - EPS) )
-            *min = term;
-        else if ( term > (*max + EPS) )
-            *max = term;
+        if ( term < (min - EPS) )
+            min = term;
+        else if ( term > (max + EPS) )
+            max = term;
     }
 
     return;
@@ -76,8 +76,8 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
     Line_t intersection_line = construct_intersection_line (T0_plane, T1_plane);
 
     double T0_min, T0_max, T1_min, T1_max;
-    compute_triangle_on_line_projection_interval (T0, intersection_line, &T0_min, &T0_max);
-    compute_triangle_on_line_projection_interval (T1, intersection_line, &T1_min, &T1_max);
+    compute_triangle_on_line_projection_interval (T0, intersection_line, T0_min, T0_max);
+    compute_triangle_on_line_projection_interval (T1, intersection_line, T1_min, T1_max);
 
     if ( T0_max < (T1_min - EPS) || T1_max < (T0_min - EPS) )
         return false;
@@ -100,8 +100,8 @@ bool do_triangles_in_the_same_plane_intersect (const Plane_t& plane, const Trian
     for (size_t i0 = 0, i1 = first.nVertices - 1; i0 < first.nVertices; i1 = i0, i0++) {
         Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{first.points[i1], first.points[i0]}); 
                                                                         
-        compute_triangle_on_line_projection_interval ( first, perpendicular,  &first_min,  &first_max);
-        compute_triangle_on_line_projection_interval (second, perpendicular, &second_min, &second_max);
+        compute_triangle_on_line_projection_interval ( first, perpendicular,  first_min,  first_max);
+        compute_triangle_on_line_projection_interval (second, perpendicular, second_min, second_max);
 
         if ( first_max < (second_min - EPS) || second_max < (first_min - EPS) )
                 return false;
@@ -110,8 +110,8 @@ bool do_triangles_in_the_same_plane_intersect (const Plane_t& plane, const Trian
     for (size_t i0 = 0, i1 = second.nVertices - 1; i0 < second.nVertices; i1 = i0, i0++) {
         Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{second.points[i1], second.points[i0]});
 
-        compute_triangle_on_line_projection_interval ( first, perpendicular,  &first_min,  &first_max);
-        compute_triangle_on_line_projection_interval (second, perpendicular, &second_min, &second_max);
+        compute_triangle_on_line_projection_interval ( first, perpendicular,  first_min,  first_max);
+        compute_triangle_on_line_projection_interval (second, perpendicular, second_min, second_max);
 
         if ( first_max < (second_min - EPS) || second_max < (first_min - EPS) )
                 return false;
