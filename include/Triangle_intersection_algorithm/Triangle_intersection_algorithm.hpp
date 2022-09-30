@@ -17,7 +17,7 @@ namespace geometry
     Line_t          construct_intersection_line                     (const Plane_t& first, const Plane_t& second);
     double          point_on_line_projection_coeff                  (const Point_t& point, const Line_t& line);
     void            compute_triangle_on_line_projection_interval    (const Triangle_t& triangle, const Line_t& line, double* min, double* max);
-    bool            intersect_triangles                             (const Triangle_t& T0, const Triangle_t& T1);
+    bool            do_triangles_intersect                          (const Triangle_t& T0, const Triangle_t& T1);
 
 //================================================================================================================================================
 
@@ -25,7 +25,7 @@ namespace geometry
 // 2D case functions =============================================================================================================================
     
     Line_t          construct_perpendicular_line_in_plane           (const Plane_t& plane, const Line_t& line);
-    bool            is_intersection_in_plane                        (const Plane_t& plane, const Triangle_t& first, const Triangle_t& second);
+    bool            do_triangles_in_the_same_plane_intersect        (const Plane_t& plane, const Triangle_t& first, const Triangle_t& second);
 
 //================================================================================================================================================
 
@@ -33,9 +33,9 @@ namespace geometry
 // degeneration case functions ===================================================================================================================
     
     bool            select_and_run_algo_for_degenerated_triangles   (const Triangle_t& T0, const Triangle_t& T1);
-    bool            is_intersection_line_segment_triangle           (const Line_segment_t& segment, const Triangle_t& triangle);
-    bool            is_point_inside_triangle                        (const Point_t& point, const Triangle_t& triangle);
-    bool            is_intersection_line_segments                   (const Line_segment_t& first, const Line_segment_t& second);
+    bool            do_line_segment_and_triangle_intersect          (const Line_segment_t& segment, const Triangle_t& triangle);
+    bool            do_point_and_triangle_intersect                 (const Point_t& point, const Triangle_t& triangle);
+    bool            do_line_segments_intersect                      (const Line_segment_t& first, const Line_segment_t& second);
     Line_segment_t  convert_to_line_segment                         (const Triangle_t& triangle);
 
 //================================================================================================================================================

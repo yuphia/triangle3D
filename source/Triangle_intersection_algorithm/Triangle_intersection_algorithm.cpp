@@ -49,7 +49,7 @@ void compute_triangle_on_line_projection_interval (const Triangle_t& triangle, c
     return;
 }
 
-bool intersect_triangles (const Triangle_t& T0, const Triangle_t& T1) {
+bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
     
     if (T0.degeneracy != Degeneracy_t::NONE || T1.degeneracy != Degeneracy_t::NONE)
         return select_and_run_algo_for_degenerated_triangles (T0, T1);
@@ -64,7 +64,7 @@ bool intersect_triangles (const Triangle_t& T0, const Triangle_t& T1) {
 
     if (T0_plane | T1_plane) {
         if (T0_plane == T1_plane)
-            return is_intersection_in_plane (T0_plane, T0, T1);
+            return do_triangles_in_the_same_plane_intersect (T0_plane, T0, T1);
         else 
             return false;
     }
@@ -93,13 +93,13 @@ Line_t construct_perpendicular_line_in_plane (const Plane_t& plane, const Line_t
 }
 
 //works properly only if triangles' planes are equal 
-bool is_intersection_in_plane (const Plane_t& plane, const Triangle_t& first, const Triangle_t& second) {
+bool do_triangles_in_the_same_plane_intersect (const Plane_t& plane, const Triangle_t& first, const Triangle_t& second) {
     
     double first_min, first_max, second_min, second_max;
 
     for (size_t i0 = 0, i1 = first.nVertices - 1; i0 < first.nVertices; i1 = i0, i0++) {
-        Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{first.points[i1], first.points[i0]});  //nado li winosit line kak 
-                                                                                                                                    //otdelnaya peremennaya ?
+        Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{first.points[i1], first.points[i0]}); 
+                                                                        
         compute_triangle_on_line_projection_interval ( first, perpendicular,  &first_min,  &first_max);
         compute_triangle_on_line_projection_interval (second, perpendicular, &second_min, &second_max);
 
@@ -134,10 +134,10 @@ bool select_and_run_algo_for_degenerated_triangles (const Triangle_t& T0, const 
         case Degeneracy_t::NONE: {
             switch (T1.degeneracy) {
                 case Degeneracy_t::LINE_SEGMENT: 
-                    return is_intersection_line_segment_triangle (convert_to_line_segment(T1), T0);
+                    return do_line_segment_and_triangle_intersect (convert_to_line_segment(T1), T0);
 
                 case Degeneracy_t::POINT: 
-                    return is_point_inside_triangle (T1.points[0], T0);
+                    return do_point_and_triangle_intersect (T1.points[0], T0);
                 
                 default:
                     break;
@@ -147,10 +147,10 @@ bool select_and_run_algo_for_degenerated_triangles (const Triangle_t& T0, const 
         case Degeneracy_t::LINE_SEGMENT: {
             switch (T1.degeneracy) {
                 case Degeneracy_t::NONE: 
-                    return is_intersection_line_segment_triangle (convert_to_line_segment(T0), T1);
+                    return do_line_segment_and_triangle_intersect (convert_to_line_segment(T0), T1);
 
                 case Degeneracy_t::LINE_SEGMENT: 
-                    return is_intersection_line_segments (convert_to_line_segment(T0), convert_to_line_segment(T1));
+                    return do_line_segments_intersect (convert_to_line_segment(T0), convert_to_line_segment(T1));
 
                 case Degeneracy_t::POINT: {
                     Line_segment_t segment = convert_to_line_segment(T0); 
@@ -164,7 +164,7 @@ bool select_and_run_algo_for_degenerated_triangles (const Triangle_t& T0, const 
         case Degeneracy_t::POINT: {
             switch (T1.degeneracy) {
                 case Degeneracy_t::NONE: 
-                    return is_point_inside_triangle (T0.points[0], T1);
+                    return do_point_and_triangle_intersect (T0.points[0], T1);
                 
                 case Degeneracy_t::LINE_SEGMENT: {
                     Line_segment_t segment = convert_to_line_segment(T1);
@@ -186,7 +186,7 @@ bool select_and_run_algo_for_degenerated_triangles (const Triangle_t& T0, const 
 
 }
 
-bool is_intersection_line_segment_triangle (const Line_segment_t& segment, const Triangle_t& triangle) {
+bool do_line_segment_and_triangle_intersect (const Line_segment_t& segment, const Triangle_t& triangle) {
     
     Line_t segment_line = Line_t {segment};
     
@@ -227,7 +227,7 @@ bool is_intersection_line_segment_triangle (const Line_segment_t& segment, const
 }
 
 //using barycentric coords
-bool is_point_inside_triangle (const Point_t& point, const Triangle_t& triangle) {
+bool do_point_and_triangle_intersect (const Point_t& point, const Triangle_t& triangle) {
     
     double doubled_triangle_area = sqrt( ( (Vector_t{triangle.points[1]} - Vector_t{triangle.points[0]}) %
                                             (Vector_t{triangle.points[2]} - Vector_t{triangle.points[0]})   ).squared_length()
@@ -257,7 +257,7 @@ bool is_point_inside_triangle (const Point_t& point, const Triangle_t& triangle)
     return true;   
 }   
 
-bool is_intersection_line_segments (const Line_segment_t& seg0, const Line_segment_t& seg1) {
+bool do_line_segments_intersect (const Line_segment_t& seg0, const Line_segment_t& seg1) {
 
     Line_t line_0  = Line_t{seg0};
     Line_t line_1 = Line_t{seg1};
