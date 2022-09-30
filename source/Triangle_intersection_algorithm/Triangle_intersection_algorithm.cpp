@@ -12,6 +12,7 @@ double signed_distance (const Point_t& P, const Plane_t& plane) {
 }
 
 //constructs inersection line of two planes (planes must not be degenerated or parallel)
+// L(t) = (first_coeff * n1 + second_coeff * n2) + t * cross (n1, n2); <- formula which used in algorithm
 Line_t construct_intersection_line (const Plane_t& first, const Plane_t& second) {
     
     double s1 = first.d;
@@ -20,10 +21,10 @@ Line_t construct_intersection_line (const Plane_t& first, const Plane_t& second)
     double sqr_len_1 =  first.normal.squared_length();
     double sqr_len_2 = second.normal.squared_length();
 
-    double a = (s2*n1_dot_n2 - s1*sqr_len_2) / (n1_dot_n2*n1_dot_n2 - sqr_len_1*sqr_len_2);
-    double b = (s1*n1_dot_n2 - s2*sqr_len_1) / (n1_dot_n2*n1_dot_n2 - sqr_len_1*sqr_len_2);
+    double first_coeff  = (s2*n1_dot_n2 - s1*sqr_len_2) / (n1_dot_n2*n1_dot_n2 - sqr_len_1*sqr_len_2);
+    double second_coeff = (s1*n1_dot_n2 - s2*sqr_len_1) / (n1_dot_n2*n1_dot_n2 - sqr_len_1*sqr_len_2);
     
-    return Line_t{first.normal*a + second.normal*b, first.normal % second.normal};
+    return Line_t{first.normal*first_coeff + second.normal*second_coeff, first.normal % second.normal};
 }
 
 double point_on_line_projection_coeff (const Point_t& point, const Line_t& line) {
