@@ -49,7 +49,7 @@ void compute_triangle_on_line_projection_interval (const Triangle_t& triangle, c
     return;
 }
 
-bool is_intersection (const Triangle_t& T0, const Triangle_t& T1) {
+bool intersect_triangles (const Triangle_t& T0, const Triangle_t& T1) {
     
     if (T0.degeneracy != Degeneracy_t::NONE || T1.degeneracy != Degeneracy_t::NONE)
         return is_intersection_degeneration_case (T0, T1);
