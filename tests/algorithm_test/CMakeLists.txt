@@ -2,6 +2,7 @@ set(
     TESTS
     2D_algorithm_test
     degeneration_test
+    service_functions_test
     main_algorithm_test
 )
 
