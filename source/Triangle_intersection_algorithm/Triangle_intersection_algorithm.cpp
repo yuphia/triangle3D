@@ -56,8 +56,20 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
 
     Plane_t T0_plane {T0.points[0], T0.points[1], T0.points[2]};
 
-    if ( (signed_distance(T1.points[0], T0_plane) > 0 && signed_distance(T1.points[1], T0_plane) > 0 && signed_distance(T1.points[2], T0_plane) > 0) ||
-            (signed_distance(T1.points[0], T0_plane) < 0 && signed_distance(T1.points[1], T0_plane) < 0 && signed_distance(T1.points[2], T0_plane) < 0) )
+    if ( ( signed_distance(T1.points[0], T0_plane) > 0 
+           && 
+           signed_distance(T1.points[1], T0_plane) > 0 
+           && 
+           signed_distance(T1.points[2], T0_plane) > 0   
+         )   
+         ||
+         ( signed_distance(T1.points[0], T0_plane) < 0 
+           && 
+           signed_distance(T1.points[1], T0_plane) < 0 
+           && 
+           signed_distance(T1.points[2], T0_plane) < 0   
+         ) 
+        )
         return false;
 
     Plane_t T1_plane {T1.points[0], T1.points[1], T1.points[2]};
