@@ -1,5 +1,5 @@
 #include <cmath> 
-#include "computational_algorithms/computational_algorithms.hpp"
+#include "Triangle_intersection_algorithm/Triangle_intersection_algorithm.hpp"
 
     
 namespace geometry

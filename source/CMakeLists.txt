@@ -6,7 +6,7 @@ set(
     plane
     line_segment
     triangle
-    computational_algorithms
+    Triangle_intersection_algorithm
 )
 
 foreach(LIB ${LIBS})

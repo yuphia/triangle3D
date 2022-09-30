@@ -1,0 +1,1 @@
+add_library(Triangle_intersection_algorithm Triangle_intersection_algorithm.cpp)
