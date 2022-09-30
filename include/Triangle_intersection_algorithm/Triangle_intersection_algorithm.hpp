@@ -32,7 +32,7 @@ namespace geometry
 
 // degeneration case functions ===================================================================================================================
     
-    bool            is_intersection_degeneration_case               (const Triangle_t& T0, const Triangle_t& T1);
+    bool            select_and_run_algo_for_degenerated_triangles   (const Triangle_t& T0, const Triangle_t& T1);
     bool            is_intersection_line_segment_triangle           (const Line_segment_t& segment, const Triangle_t& triangle);
     bool            is_point_inside_triangle                        (const Point_t& point, const Triangle_t& triangle);
     bool            is_intersection_line_segments                   (const Line_segment_t& first, const Line_segment_t& second);

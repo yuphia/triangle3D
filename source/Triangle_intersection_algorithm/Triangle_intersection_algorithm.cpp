@@ -52,7 +52,7 @@ void compute_triangle_on_line_projection_interval (const Triangle_t& triangle, c
 bool intersect_triangles (const Triangle_t& T0, const Triangle_t& T1) {
     
     if (T0.degeneracy != Degeneracy_t::NONE || T1.degeneracy != Degeneracy_t::NONE)
-        return is_intersection_degeneration_case (T0, T1);
+        return select_and_run_algo_for_degenerated_triangles (T0, T1);
 
     Plane_t T0_plane {T0.points[0], T0.points[1], T0.points[2]};
 
@@ -124,11 +124,11 @@ bool is_intersection_in_plane (const Plane_t& plane, const Triangle_t& first, co
 
 // degeneration case functions ===================================================================================================================
 
-bool is_intersection_degeneration_case (const Triangle_t& T0, const Triangle_t& T1) {
-    /*
+bool select_and_run_algo_for_degenerated_triangles (const Triangle_t& T0, const Triangle_t& T1) {
+    
     if (T0.degeneracy == Degeneracy_t::INVALID || T1.degeneracy == Degeneracy_t::INVALID)
         return false;
-    */
+    
     switch (T0.degeneracy) {
 
         case Degeneracy_t::NONE: {
