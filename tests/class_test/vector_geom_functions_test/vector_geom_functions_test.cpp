@@ -224,6 +224,7 @@ TEST(normalization, normCollinearity)
     Vector_t norm = vec.normalize();
 
     EXPECT_EQ (norm.is_collinear_to(vec), 1);
+    EXPECT_EQ (norm.degeneracy, vec.degeneracy);
 }
 
 }

@@ -27,7 +27,7 @@ inline double sqr (const double x)
 
 inline bool equal_eps (const double x, const double y)
 {
-    return (abs(x - y) < EPS);    
+    return (fabs(x - y) < EPS);    
 }
 
 }

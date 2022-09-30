@@ -29,7 +29,7 @@ TEST (constructorTesting, constructor3PointsSimple)
     Plane_t plane {p0, p1, p2};
 
     EXPECT_EQ (plane.normal, vec);
-    EXPECT_EQ (plane.d, -1);
+    EXPECT_EQ (plane.d, 1);
     EXPECT_EQ (plane.degeneracy, Degeneracy_t::NONE);
 }
 
@@ -68,8 +68,8 @@ TEST (constructorTesting, constructorByCoeffs)
     Plane_t plane {1, 2, 3, 4};
     Vector_t normal {1, 2, 3};
 
-    EXPECT_EQ (plane.normal, normal);
-    EXPECT_EQ (plane.d, 4/sqrt(14));
+    EXPECT_EQ (plane.normal, normal.normalize());
+    EXPECT_EQ (plane.d, -4/sqrt(14));
     EXPECT_EQ (plane.degeneracy, Degeneracy_t::NONE);
 }
 
@@ -77,10 +77,14 @@ TEST (constructorTesting, constructorByNormalAndPoint)
 {
     Vector_t normal {1, 1, 1};
     Point_t point {1, 1, 1};
+
+    Vector_t vec_for_test {point};
+    double d = normal.normalize() * vec_for_test;
+
     Plane_t plane {point, normal};
 
     EXPECT_EQ (plane.normal, normal.normalize());
-    EXPECT_EQ (equal_eps(plane.d, 1), 1);
+    EXPECT_EQ (d, plane.d);
     EXPECT_EQ (plane.degeneracy, Degeneracy_t::NONE);
 }
 
