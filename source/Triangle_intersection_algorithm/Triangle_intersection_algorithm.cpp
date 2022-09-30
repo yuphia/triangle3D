@@ -87,7 +87,8 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
 
     Line_t intersection_line = construct_intersection_line (T0_plane, T1_plane);
 
-    double T0_min, T0_max, T1_min, T1_max;
+    double T0_min, T0_max, T1_min, T1_max = std::numeric_limits<double>::quiet_NaN();
+    
     compute_triangle_on_line_projection_interval (T0, intersection_line, T0_min, T0_max);
     compute_triangle_on_line_projection_interval (T1, intersection_line, T1_min, T1_max);
 
