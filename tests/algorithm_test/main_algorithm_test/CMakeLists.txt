@@ -1,0 +1,1 @@
+add_executable(main_algorithm_test main_algorithm_test.cpp)

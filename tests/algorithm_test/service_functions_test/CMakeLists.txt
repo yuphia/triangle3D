@@ -1,1 +1,1 @@
-add_executable(main_algorithm_test main_algorithm_test.cpp)
+add_executable(service_functions_test service_functions_test.cpp)

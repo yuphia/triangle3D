@@ -92,17 +92,32 @@ TEST (constructorTesting, constructorByNormalAndPoint)
 
 namespace operator_testing
 {
-/*
+
 TEST (operatorTesting, operatorParallelSuccess)
 {
-    Plane_t plane {};
-}*/
+    Plane_t plane1 {2.0, 4.0, 6.0, 8.0};
+    Plane_t plane2 {1.0, 2.0, 3.0, 0.0};
+    Plane_t plane3 {1.0, 2.0, 1.0, 0.0};
 
+    EXPECT_EQ (plane1 | plane2, true);
+    EXPECT_EQ (plane1 | plane3, false);
 }
 
+TEST (operatorTesting, operatorEqualSuccess)
+{
+    Plane_t plane1 {2.0, 4.0, 6.0, 8.0};
+    Plane_t plane2 {1.0, 2.0, 3.0, 0.0};
+    Plane_t plane3 {1.0, 2.0, 3.0, 0.0};
+
+    EXPECT_EQ (plane1 == plane2, false);
+    EXPECT_EQ (plane2 == plane3, true);
 }
-}
-}
+
+} //operator_testing
+
+} //plane_functions_test
+} //testing
+} //geometry
 
 int main (int argc, char** argv)
 {

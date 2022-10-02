@@ -3,11 +3,6 @@
 namespace geometry
 {
 
-    inline bool Line_t::operator== (const Line_t& rhs) const
-    {
-        return ((direction_vec == rhs.direction_vec) && (point_on_line == rhs.point_on_line));
-    }
-
     Line_t::Line_t (const Point_t& p0, const Point_t& p1) : 
                                                           direction_vec{p1.x - p0.x, p1.y - p0.y, p1.z - p0.z},
                                                           point_on_line{p0}
@@ -54,6 +49,11 @@ namespace geometry
             degeneracy = Degeneracy_t::POINT;
         else 
             degeneracy = Degeneracy_t::NONE;
+    }
+
+    bool Line_t::operator== (const Line_t& rhs) const
+    {
+        return ((direction_vec == rhs.direction_vec) && (point_on_line == rhs.point_on_line));
     }
 
 } // geometry

@@ -20,8 +20,6 @@ public:
     {
         degeneracy = Degeneracy_t::INVALID;
     }
-
-    //bool operator^ (const Line_segment_t& rhs);
 };
 
 } //geometry

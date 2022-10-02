@@ -14,9 +14,5 @@ namespace geometry
         else
             degeneracy = Degeneracy_t::NONE;
     }
-/*
-    bool Line_segment_t::operator^ (const Line_segment_t& rhs) {
-        
-    }*/
 
 } //geometry

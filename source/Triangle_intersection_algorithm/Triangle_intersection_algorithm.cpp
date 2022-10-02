@@ -7,8 +7,7 @@ namespace geometry
 
 // main algorithm functions ====================================================================================================================== 
 double signed_distance (const Point_t& P, const Plane_t& plane) {
-
-    return (plane.d + (plane.normal * Vector_t{P}));
+    return (plane.normal * Vector_t{P} - plane.d);
 }
 
 //constructs inersection line of two planes (planes must not be degenerated or parallel)
@@ -18,18 +17,17 @@ Line_t construct_intersection_line (const Plane_t& first, const Plane_t& second)
     double s1 = first.d;
     double s2 = second.d;
     double n1_dot_n2 =  first.normal * second.normal;
-    double sqr_len_1 =  first.normal.squared_length();
-    double sqr_len_2 = second.normal.squared_length();
 
-    double first_coeff  = (s2*n1_dot_n2 - s1*sqr_len_2) / (n1_dot_n2*n1_dot_n2 - sqr_len_1*sqr_len_2);
-    double second_coeff = (s1*n1_dot_n2 - s2*sqr_len_1) / (n1_dot_n2*n1_dot_n2 - sqr_len_1*sqr_len_2);
+    double first_coeff  = (s2*n1_dot_n2 - s1) / (n1_dot_n2*n1_dot_n2 - 1.0);
+    double second_coeff = (s1*n1_dot_n2 - s2) / (n1_dot_n2*n1_dot_n2 - 1.0);
     
-    return Line_t{first.normal*first_coeff + second.normal*second_coeff, first.normal % second.normal};
+    //std::cout << (first.normal*first_coeff + second.normal*second_coeff).x << ' ' << (first.normal*first_coeff + second.normal*second_coeff).y << ' ' << (first.normal*first_coeff + second.normal*second_coeff).z << std::endl;
+    //std::cout << (first.normal*first_coeff + second.normal*second_coeff) * first.normal << ' ' << (first.normal*first_coeff + second.normal*second_coeff) * second.normal << std::endl;
+    return Line_t{first.normal % second.normal, first.normal*first_coeff + second.normal*second_coeff};
 }
 
 double point_on_line_projection_coeff (const Point_t& point, const Line_t& line) {
-    return ( (line.direction_vec * (Vector_t{point} - line.point_on_line)) / 
-                line.direction_vec.squared_length());
+    return ( (line.direction_vec * (Vector_t{point} - line.point_on_line)) / line.direction_vec.squared_length());
 }
 
 // can be templated on polygon, if triangle_t -> part of polygon_t
@@ -55,6 +53,7 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
         return select_and_run_algo_for_degenerated_triangles (T0, T1);
 
     Plane_t T0_plane {T0.points[0], T0.points[1], T0.points[2]};
+    //std::cout << signed_distance(T1.points[0], T0_plane) << ' ' << signed_distance(T1.points[1], T0_plane) << ' ' << signed_distance(T1.points[2], T0_plane) << std::endl;
 
     if ( ( signed_distance(T1.points[0], T0_plane) > 0 
            && 
@@ -69,8 +68,10 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
            && 
            signed_distance(T1.points[2], T0_plane) < 0   
          ) 
-        )
+        ) {
+        //std::cout << "AAAAAAAAAAAA" << std::endl;
         return false;
+        }
 
     Plane_t T1_plane {T1.points[0], T1.points[1], T1.points[2]};
 
@@ -81,8 +82,20 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
             return false;
     }
 
-    if ( (signed_distance(T0.points[0], T1_plane) > 0 && signed_distance(T0.points[1], T1_plane) > 0 && signed_distance(T0.points[2], T1_plane) > 0) ||
-            (signed_distance(T0.points[0], T1_plane) < 0 && signed_distance(T0.points[1], T1_plane) < 0 && signed_distance(T0.points[2], T1_plane) < 0) )
+    if ( ( signed_distance(T0.points[0], T1_plane) > 0 
+           && 
+           signed_distance(T0.points[1], T1_plane) > 0 
+           && 
+           signed_distance(T0.points[2], T1_plane) > 0
+         ) 
+         ||
+         ( signed_distance(T0.points[0], T1_plane) < 0 
+           && 
+           signed_distance(T0.points[1], T1_plane) < 0 
+           && 
+           signed_distance(T0.points[2], T1_plane) < 0
+         ) 
+       )
         return false;
 
     Line_t intersection_line = construct_intersection_line (T0_plane, T1_plane);
@@ -112,22 +125,26 @@ bool do_triangles_in_the_same_plane_intersect (const Plane_t& plane, const Trian
 
     for (size_t i0 = 0, i1 = first.nVertices - 1; i0 < first.nVertices; i1 = i0, i0++) {
         Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{first.points[i1], first.points[i0]}); 
-                                                                        
-        compute_triangle_projection_on_line_segment ( first, perpendicular,  first_min,  first_max);
-        compute_triangle_projection_on_line_segment (second, perpendicular, second_min, second_max);
 
-        if ( first_max < (second_min - EPS) || second_max < (first_min - EPS) )
+        if (perpendicular.degeneracy == Degeneracy_t::NONE) {                                               
+            compute_triangle_projection_on_line_segment ( first, perpendicular,  first_min,  first_max);
+            compute_triangle_projection_on_line_segment (second, perpendicular, second_min, second_max);
+
+            if ( first_max < (second_min - EPS) || second_max < (first_min - EPS) )
                 return false;
+        }
     }
 
     for (size_t i0 = 0, i1 = second.nVertices - 1; i0 < second.nVertices; i1 = i0, i0++) {
         Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{second.points[i1], second.points[i0]});
 
-        compute_triangle_projection_on_line_segment ( first, perpendicular,  first_min,  first_max);
-        compute_triangle_projection_on_line_segment (second, perpendicular, second_min, second_max);
+        if (perpendicular.degeneracy == Degeneracy_t::NONE) {
+            compute_triangle_projection_on_line_segment ( first, perpendicular,  first_min,  first_max);
+            compute_triangle_projection_on_line_segment (second, perpendicular, second_min, second_max);
 
-        if ( first_max < (second_min - EPS) || second_max < (first_min - EPS) )
+            if ( first_max < (second_min - EPS) || second_max < (first_min - EPS) )
                 return false;
+        }
     }
 
     return true;
@@ -147,7 +164,7 @@ bool select_and_run_algo_for_degenerated_triangles (const Triangle_t& T0, const 
         case Degeneracy_t::NONE: {
             switch (T1.degeneracy) {
                 case Degeneracy_t::LINE_SEGMENT: 
-                    return do_line_segment_and_triangle_intersect (convert_to_line_segment(T1), T0);
+                    return do_line_segment_and_triangle_intersect (T1, T0);
 
                 case Degeneracy_t::POINT: 
                     return do_point_and_triangle_intersect (T1.points[0], T0);
@@ -160,7 +177,7 @@ bool select_and_run_algo_for_degenerated_triangles (const Triangle_t& T0, const 
         case Degeneracy_t::LINE_SEGMENT: {
             switch (T1.degeneracy) {
                 case Degeneracy_t::NONE: 
-                    return do_line_segment_and_triangle_intersect (convert_to_line_segment(T0), T1);
+                    return do_line_segment_and_triangle_intersect (T0, T1);
 
                 case Degeneracy_t::LINE_SEGMENT: 
                     return do_line_segments_intersect (convert_to_line_segment(T0), convert_to_line_segment(T1));
@@ -199,18 +216,27 @@ bool select_and_run_algo_for_degenerated_triangles (const Triangle_t& T0, const 
 
 }
 
-bool do_line_segment_and_triangle_intersect (const Line_segment_t& segment, const Triangle_t& triangle) {
+bool do_line_segment_and_triangle_intersect (const Triangle_t& degenerated_to_segment, const Triangle_t& triangle) {
     
-    Line_t segment_line = Line_t {segment};
+    Line_t segment_line = Line_t {convert_to_line_segment(degenerated_to_segment)};
     
     double t, u, v, denom;
     Vector_t V01 = Vector_t{triangle.points[1]} - Vector_t{triangle.points[0]};
     Vector_t V02 = Vector_t{triangle.points[2]} - Vector_t{triangle.points[0]};
     
     Vector_t p = segment_line.direction_vec % V02;
+    
     if (p.degeneracy == Degeneracy_t::NONE)
         denom = p * V01;
-    else 
+    else if (p.degeneracy == Degeneracy_t::NULL_VECTOR) {
+        Plane_t triangle_plane{triangle.points[0], triangle.points[1], triangle.points[2]};
+        if ( equal_eps(signed_distance(degenerated_to_segment.points[0], triangle_plane), 0.0) &&
+             equal_eps(signed_distance(degenerated_to_segment.points[1], triangle_plane), 0.0) && 
+             equal_eps(signed_distance(degenerated_to_segment.points[2], triangle_plane), 0.0) 
+           )
+            return do_triangles_in_the_same_plane_intersect (triangle_plane, degenerated_to_segment, triangle);
+    }
+    else
         return false;
 
     if (equal_eps (denom, 0.0))
@@ -243,28 +269,28 @@ bool do_line_segment_and_triangle_intersect (const Line_segment_t& segment, cons
 bool do_point_and_triangle_intersect (const Point_t& point, const Triangle_t& triangle) {
     
     double doubled_triangle_area = sqrt( ( (Vector_t{triangle.points[1]} - Vector_t{triangle.points[0]}) %
-                                            (Vector_t{triangle.points[2]} - Vector_t{triangle.points[0]})   ).squared_length()
+                                           (Vector_t{triangle.points[2]} - Vector_t{triangle.points[0]})   ).squared_length()
                                         );
-
+    
     double alpha = sqrt( ( (Vector_t{triangle.points[1]} - Vector_t{point}) %
                             (Vector_t{triangle.points[2]} - Vector_t{point})   ).squared_length()
-                        );
+                        ) / doubled_triangle_area;
     if ( alpha < (0.0 - EPS) || alpha > (1.0 + EPS) )
         return false;
 
     double beta  = sqrt( ( (Vector_t{triangle.points[2]} - Vector_t{point}) %
                             (Vector_t{triangle.points[0]} - Vector_t{point})   ).squared_length()
-                        );
+                        ) / doubled_triangle_area;
     if ( beta  < (0.0 - EPS) || beta  > (1.0 + EPS) )
         return false;
 
     double gamma = sqrt( ( (Vector_t{triangle.points[0]} - Vector_t{point}) %
                             (Vector_t{triangle.points[1]} - Vector_t{point})   ).squared_length()
-                        );
+                        ) / doubled_triangle_area;
     if ( gamma < (0.0 - EPS) || gamma > (1.0 + EPS) )
         return false;
     
-    if (!equal_eps(alpha + beta + gamma, doubled_triangle_area))
+    if (!equal_eps(alpha + beta + gamma, 1.0))
         return false;
 
     return true;   
@@ -273,7 +299,7 @@ bool do_point_and_triangle_intersect (const Point_t& point, const Triangle_t& tr
 bool do_line_segments_intersect (const Line_segment_t& seg0, const Line_segment_t& seg1) {
 
     Line_t line_0  = Line_t{seg0};
-    Line_t line_1 = Line_t{seg1};
+    Line_t line_1  = Line_t{seg1};
 
     double s, t, distance;
 
@@ -287,8 +313,7 @@ bool do_line_segments_intersect (const Line_segment_t& seg0, const Line_segment_
 
     double det = a*c - b*b;
     
-    //lev pawol nah
-    if (equal_eps(det, 0.0)) {  // надо тестить, потому что мне показалось, что алгосв книжке неправильный -> я его поменял
+    if (equal_eps(det, 0.0)) {  
         s = 0.0;
         
         if (b > c) 
@@ -305,8 +330,9 @@ bool do_line_segments_intersect (const Line_segment_t& seg0, const Line_segment_
             double seg1_min, seg1_max = param_0;
 
             (param_0 < param_1) ? : seg1_max = param1, seg1_min = param_1;*/
+            
 
-            if ( t < (0.0 - EPS) || t > (1.0 + EPS) )
+            if ( ((e + b) / c) < (0.0 - EPS) || t > (1.0 + EPS) )
                 return false;
             
             return true;
@@ -332,8 +358,11 @@ bool do_line_segments_intersect (const Line_segment_t& seg0, const Line_segment_
 
 Line_segment_t convert_to_line_segment (const Triangle_t& triangle) {
     
-    const Line_t line = Line_t{triangle.points[0], triangle.points[1]};
+    Line_t line = Line_t{triangle.points[0], triangle.points[1]};
 
+    if (line.degeneracy == Degeneracy_t::POINT)
+        return Line_segment_t {triangle.points[0], triangle.points[2]};
+    
     double param = ((Vector_t{triangle.points[2]} - Vector_t{triangle.points[0]}) * line.direction_vec) / line.direction_vec.squared_length();
 
     if (param < (0.0 - EPS)) 

@@ -23,7 +23,7 @@ public:
         degeneracy = Degeneracy_t::INVALID;
     }
 
-    inline bool operator== (const Line_t& rhs) const;    
+    bool operator== (const Line_t& rhs) const;    
 };
 
 } // geometry

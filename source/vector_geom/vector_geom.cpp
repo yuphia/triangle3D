@@ -47,12 +47,7 @@ namespace geometry
 
     bool Vector_t::is_collinear_to (const Vector_t& vec) const
     {
-        if (degeneracy == Degeneracy_t::NULL_VECTOR || vec.degeneracy == Degeneracy_t::NULL_VECTOR)
-            return true; 
-
-        bool i = (equal_eps(vec.x/x, vec.y/y) && equal_eps(vec.y/y, vec.z/z)); // check if zero
-
-        return i;
+        return (equal_eps (((*this) % vec).squared_length(), 0.0));
     }
 
     Vector_t Vector_t::operator* (const double rhs) const 
