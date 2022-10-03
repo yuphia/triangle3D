@@ -41,6 +41,7 @@ int main()
             if (is_curr_intersected == true)
             {
                 std::cout << list_iter->second << " ";
+                std::cout << i << " ";
                 is_intersected_at_all = true;
 
                 triangle_vector_intersected.push_back (*list_iter);
@@ -59,7 +60,7 @@ int main()
                 is_curr_intersected = geometry::do_triangles_intersect (triangle, vector_iter->first);
                 if (is_curr_intersected == true)
                 {
-                    std::cout << vector_iter->second << " ";
+                    std::cout << i << " ";
                     triangle_vector_intersected.push_back (std::make_pair (triangle, i));
                     is_intersected_at_all = true;
                     break;
@@ -72,7 +73,9 @@ int main()
         }
 
         if (!is_intersected_at_all)
+        {
             triangle_list_unintersected.push_back (std::make_pair (triangle, i));
+        }
     }
 
     std::cout << std::endl;
