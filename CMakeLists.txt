@@ -106,8 +106,8 @@ foreach(LIB ${LIBS})
 
     target_compile_features(${LIB} PRIVATE cxx_std_17)
 
-    target_link_options(${LIB} PRIVATE "${FLAGS}")
-    target_compile_options(${LIB} PRIVATE "${WARNS};${FLAGS}")
+    #target_link_options(${LIB} PRIVATE "${FLAGS}")
+    #target_compile_options(${LIB} PRIVATE "${WARNS};${FLAGS}")
 
     target_include_directories(${LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
     #    target_link_libraries(${LIB} PUBLIC )
@@ -139,59 +139,62 @@ foreach(LIB ${LIBS})
     message(STATUS "")        
 endforeach()
 
-#add_subdirectory(apps)
-#message (STATUS "Collected APPS: ${APPS}")
-
-#foreach(APP ${APPS})
-    #message (STATUS "app: ${APP}")
-
-    #target_compile_features(${APP} PRIVATE cxx_std_17)
-
-    #target_link_options(${APP} PRIVATE "${FLAGS}")
-    #target_compile_options(${APP} PRIVATE "${WARNS};${FLAGS}")
-
-    #target_include_directories(${APP} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-    #target_link_libraries(${APP} PUBLIC )
-
-    #get_property(dirs TARGET ${APP} PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
-    #foreach(dir ${dirs})
-        #message(STATUS "${APP} includes dir = '${dir}'")    
-        #    endforeach()
-    
-    
-    #endforeach()
 
 enable_testing()
 find_package (GTest REQUIRED)
+
 
 add_subdirectory(tests)
 
 message (STATUS "\n////////////////")
 message (STATUS "Collected TESTS:")
 foreach(TEST ${TESTS})
-    message (STATUS "   ${TEST}")
+message (STATUS "   ${TEST}")
 endforeach()
 message (STATUS "")
 
 
 foreach (TEST ${TESTS})
-    message (STATUS "tests: ${TEST}")
+message (STATUS "tests: ${TEST}")
 
-    target_compile_features(${TEST} PRIVATE cxx_std_17)
+target_compile_features(${TEST} PRIVATE cxx_std_17)
 
-    target_link_options(${TEST} PRIVATE "${FLAGS}")
+target_link_options(${TEST} PRIVATE "${FLAGS}")
     target_compile_options(${TEST} PRIVATE "${WARNS};${FLAGS}")
-
+    
     target_include_directories(${TEST} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
     target_link_libraries (${TEST} PRIVATE ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
     target_link_libraries (${TEST} PRIVATE ${LIBS})
-
+    
     get_target_property(OUT ${TEST} LINK_LIBRARIES)
     
     foreach(LIB ${OUT})
-        message(STATUS "    linked: ${LIB}")
+    message(STATUS "    linked: ${LIB}")
     endforeach()
     
     message(STATUS "")
-
+    
 endforeach ()
+
+add_subdirectory(apps)
+message (STATUS "\n////////////////")
+message (STATUS "Collected APPS: ${APPS}")
+    
+foreach(APP ${APPS})
+    message (STATUS "    app: ${APP}")
+
+    target_compile_features(${APP} PRIVATE cxx_std_17)
+
+    #target_link_options(${APP} PRIVATE "${FLAGS}")
+    #target_compile_options(${APP} PRIVATE "${WARNS};${FLAGS}")
+
+    target_include_directories(${APP} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    target_link_libraries(${APP} PRIVATE ${LIBS})
+
+    get_property(dirs TARGET ${APP} PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
+    foreach(dir ${dirs})
+        message(STATUS "    ${APP} includes dir = '${dir}'")    
+    endforeach()
+
+    message (STATUS "")
+endforeach()

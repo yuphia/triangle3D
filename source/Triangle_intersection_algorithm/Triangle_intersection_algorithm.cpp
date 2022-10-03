@@ -47,8 +47,7 @@ void compute_triangle_projection_on_line_segment (const Triangle_t& triangle, co
     return;
 }
 
-bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
-    
+bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) { 
     if (T0.degeneracy != Degeneracy_t::NONE || T1.degeneracy != Degeneracy_t::NONE)
         return select_and_run_algo_for_degenerated_triangles (T0, T1);
 

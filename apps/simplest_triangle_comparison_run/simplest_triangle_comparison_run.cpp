@@ -1,0 +1,80 @@
+#include "Triangle_intersection_algorithm/Triangle_intersection_algorithm.hpp"
+#include <iostream>
+#include <vector>
+#include <list>
+#include <cassert>
+
+int main()
+{
+    size_t amount = 0;
+    std::cin >> amount;
+
+    assert (std::cin.good());
+
+    std::vector <std::pair <geometry::Triangle_t, size_t>> triangle_vector_intersected{};
+    std::list <std::pair <geometry::Triangle_t, size_t>> triangle_list_unintersected{};
+
+    double x, y, z;
+    for (size_t i = 0; i < amount; i++)
+    {
+        std::cin >> x >> y >> z;
+        assert (std::cin.good());
+        geometry::Point_t p0 {x, y, z};
+
+        std::cin >> x >> y >> z;
+        assert (std::cin.good());
+        geometry::Point_t p1 {x, y, z};
+ 
+        std::cin >> x >> y >> z;
+        assert (std::cin.good());
+        geometry::Point_t p2 {x, y, z};        
+
+        geometry::Triangle_t triangle {p0, p1, p2};
+        //triangle_vector_intersected.push_back (std::make_pair (triangle, i));
+
+        bool is_curr_intersected = false;
+        bool is_intersected_at_all = false;
+        for (auto list_iter = triangle_list_unintersected.begin(); list_iter != triangle_list_unintersected.end();)
+        {
+
+            is_curr_intersected = geometry::do_triangles_intersect (triangle, list_iter->first);
+            if (is_curr_intersected == true)
+            {
+                std::cout << list_iter->second << " ";
+                is_intersected_at_all = true;
+
+                triangle_vector_intersected.push_back (*list_iter);
+                triangle_list_unintersected.erase (list_iter);   
+                list_iter = triangle_list_unintersected.end();
+            }
+            else
+                ++list_iter;
+        }
+
+        if (is_intersected_at_all == false)
+        {   
+            auto vector_iter = triangle_vector_intersected.begin();
+            for (; vector_iter != triangle_vector_intersected.end(); ++vector_iter)
+            {
+                is_curr_intersected = geometry::do_triangles_intersect (triangle, vector_iter->first);
+                if (is_curr_intersected == true)
+                {
+                    std::cout << vector_iter->second << " ";
+                    triangle_vector_intersected.push_back (std::make_pair (triangle, i));
+                    is_intersected_at_all = true;
+                    vector_iter = triangle_vector_intersected.end();
+                }
+            }
+        }
+        else 
+        {
+            triangle_vector_intersected.push_back (std::make_pair (triangle, i));
+        }
+
+        if (!is_intersected_at_all)
+            triangle_list_unintersected.push_back (std::make_pair (triangle, i));
+    }
+
+    std::cout << std::endl;
+    return 0;
+}
