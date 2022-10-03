@@ -23,6 +23,7 @@ Line_t construct_intersection_line (const Plane_t& first, const Plane_t& second)
     
     //std::cout << (first.normal*first_coeff + second.normal*second_coeff).x << ' ' << (first.normal*first_coeff + second.normal*second_coeff).y << ' ' << (first.normal*first_coeff + second.normal*second_coeff).z << std::endl;
     //std::cout << (first.normal*first_coeff + second.normal*second_coeff) * first.normal << ' ' << (first.normal*first_coeff + second.normal*second_coeff) * second.normal << std::endl;
+    //std::cout << (first.normal % second.normal).x << ' ' << (first.normal % second.normal).y << ' ' << (first.normal % second.normal).z << std::endl;
     return Line_t{first.normal % second.normal, first.normal*first_coeff + second.normal*second_coeff};
 }
 
@@ -49,7 +50,7 @@ void compute_triangle_projection_on_line (const Triangle_t& triangle, const Line
 
 void compute_triangle_projection_interval (const Triangle_t& triangle, const Plane_t& other_triangle_plane, const Line_t& line, double& min, double& max) {
 
-    for (size_t i0 = 0, i1 = 1, i2 = 2; i0 < 2; i2 = i1, i1 = i0, i0++) {
+    for (size_t i0 = 0, i1 = 1, i2 = 2; i0 < 3; i1 = i2, i2 = i0, i0++) {
         if ( equal_eps (signed_distance(triangle.points[i0], other_triangle_plane), 0.0) ) {
             
             if ( equal_eps (signed_distance(triangle.points[i1], other_triangle_plane), 0.0) ) {
@@ -61,7 +62,16 @@ void compute_triangle_projection_interval (const Triangle_t& triangle, const Pla
                 max = point_on_line_projection_coeff (triangle.points[i2], line);
             }
             else {
-                min, max = point_on_line_projection_coeff (triangle.points[i0], line);
+                min = point_on_line_projection_coeff (triangle.points[i0], line);
+                
+                Line_t edge {triangle.points[i1], triangle.points[i2]};
+                double a    = line.direction_vec * line.direction_vec;
+                Vector_t u = line.point_on_line - edge.point_on_line;
+                double b   = line.direction_vec * edge.direction_vec;
+                double c   = edge.direction_vec * edge.direction_vec;
+                double d   = line.direction_vec * u;
+                double e   = edge.direction_vec * u;
+                max = (b*e- c*d) / (a*c - b*b);
             }
 
             if (max < (min - EPS)) {
@@ -70,6 +80,7 @@ void compute_triangle_projection_interval (const Triangle_t& triangle, const Pla
                 min = temp;
             }
 
+            //std::cout << min << ' ' << max << std::endl;
             return;
         }
     }
@@ -79,19 +90,29 @@ void compute_triangle_projection_interval (const Triangle_t& triangle, const Pla
     if      (sign (signed_distance(triangle.points[0], other_triangle_plane)) == sign (signed_distance(triangle.points[1], other_triangle_plane))) {
         edge1 = Line_t {triangle.points[2], triangle.points[0]};
         edge2 = Line_t {triangle.points[2], triangle.points[1]};
+        
+            //std::cout << "RASIA" << std::endl;
     }
     else if (sign (signed_distance(triangle.points[0], other_triangle_plane)) == sign (signed_distance(triangle.points[2], other_triangle_plane))) {
         edge1 = Line_t {triangle.points[1], triangle.points[0]};
         edge2 = Line_t {triangle.points[1], triangle.points[2]};
+        
+            //std::cout << "RASIA" << std::endl;
     }
     else if (sign (signed_distance(triangle.points[1], other_triangle_plane)) == sign (signed_distance(triangle.points[2], other_triangle_plane))) {
         edge1 = Line_t {triangle.points[0], triangle.points[1]};
-        edge2 = Line_t {triangle.points[0], triangle.points[2]};   
+        edge2 = Line_t {triangle.points[0], triangle.points[2]}; 
+        
+            //std::cout << "RASIA" << std::endl;  
     }
-    else return;
+    else {
+        //std::cout << triangle.points[0].x << ' ' << triangle.points[0].y << ' ' << triangle.points[0].z << std::endl;
+        return;
+    }
+
+    double a    = line.direction_vec * line.direction_vec;
 
     Vector_t u1 = line.point_on_line - edge1.point_on_line;
-    double a    = line.direction_vec * line.direction_vec;
     double b1   = line.direction_vec * edge1.direction_vec;
     double c1   = edge1.direction_vec * edge1.direction_vec;
     double d1   = line.direction_vec * u1;
@@ -114,6 +135,7 @@ void compute_triangle_projection_interval (const Triangle_t& triangle, const Pla
         max = s1;
     }
 
+    //std::cout << min << ' ' << max << std::endl;
     return;
 }
 
@@ -137,7 +159,8 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
            && 
            signed_distance(T1.points[2], T0_plane) < -EPS   
          ) 
-        ) {
+        ) 
+    {
         //std::cout << "AAAAAAAAAAAA" << std::endl;
         return false;
     }
@@ -175,6 +198,7 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
     
     compute_triangle_projection_interval (T0, T1_plane, intersection_line, T0_min, T0_max);
     compute_triangle_projection_interval (T1, T0_plane, intersection_line, T1_min, T1_max);
+    //std::cout << T0_min << ' ' << T0_max << ' ' << T1_min << ' ' << T1_max << std::endl;
 
     if ( T0_max < (T1_min - EPS) || T1_max < (T0_min - EPS) )
         return false;
