@@ -45,7 +45,7 @@ int main()
 
                 triangle_vector_intersected.push_back (*list_iter);
                 triangle_list_unintersected.erase (list_iter);   
-                list_iter = triangle_list_unintersected.end();
+                break;
             }
             else
                 ++list_iter;
@@ -62,7 +62,7 @@ int main()
                     std::cout << vector_iter->second << " ";
                     triangle_vector_intersected.push_back (std::make_pair (triangle, i));
                     is_intersected_at_all = true;
-                    vector_iter = triangle_vector_intersected.end();
+                    break;
                 }
             }
         }
