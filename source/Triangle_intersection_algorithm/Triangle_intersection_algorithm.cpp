@@ -30,9 +30,8 @@ double point_on_line_projection_coeff (const Point_t& point, const Line_t& line)
     return ( (line.direction_vec * (Vector_t{point} - line.point_on_line)) / line.direction_vec.squared_length());
 }
 
-// can be templated on polygon, if triangle_t -> part of polygon_t
-void compute_triangle_projection_on_line_segment (const Triangle_t& triangle, const Line_t& line, double& min, double& max) {
-    
+void compute_triangle_projection_on_line (const Triangle_t& triangle, const Line_t& line, double& min, double& max) {
+ 
     min = max = point_on_line_projection_coeff (triangle.points[0], line);
     double term = min;
     
@@ -45,6 +44,77 @@ void compute_triangle_projection_on_line_segment (const Triangle_t& triangle, co
     }
 
     return;
+
+}
+
+void compute_triangle_projection_interval (const Triangle_t& triangle, const Plane_t& other_triangle_plane, const Line_t& line, double& min, double& max) {
+
+    for (size_t i0 = 0, i1 = 1, i2 = 2; i0 < 2; i2 = i1, i1 = i0, i0++) {
+        if ( equal_eps (signed_distance(triangle.points[i0], other_triangle_plane), 0.0) ) {
+            
+            if ( equal_eps (signed_distance(triangle.points[i1], other_triangle_plane), 0.0) ) {
+                min = point_on_line_projection_coeff (triangle.points[i0], line);
+                max = point_on_line_projection_coeff (triangle.points[i1], line);
+            }
+            else if ( equal_eps (signed_distance(triangle.points[i2], other_triangle_plane), 0.0) ) {
+                min = point_on_line_projection_coeff (triangle.points[i0], line);
+                max = point_on_line_projection_coeff (triangle.points[i2], line);
+            }
+            else {
+                min, max = point_on_line_projection_coeff (triangle.points[i0], line);
+            }
+
+            if (max < (min - EPS)) {
+                double temp = max;
+                max = min;
+                min = temp;
+            }
+
+            return;
+        }
+    }
+    
+    Line_t edge1, edge2;
+
+    if      (sign (signed_distance(triangle.points[0], other_triangle_plane)) == sign (signed_distance(triangle.points[1], other_triangle_plane))) {
+        edge1 = Line_t {triangle.points[2], triangle.points[0]};
+        edge2 = Line_t {triangle.points[2], triangle.points[1]};
+    }
+    else if (sign (signed_distance(triangle.points[0], other_triangle_plane)) == sign (signed_distance(triangle.points[2], other_triangle_plane))) {
+        edge1 = Line_t {triangle.points[1], triangle.points[0]};
+        edge2 = Line_t {triangle.points[1], triangle.points[2]};
+    }
+    else if (sign (signed_distance(triangle.points[1], other_triangle_plane)) == sign (signed_distance(triangle.points[2], other_triangle_plane))) {
+        edge1 = Line_t {triangle.points[0], triangle.points[1]};
+        edge2 = Line_t {triangle.points[0], triangle.points[2]};   
+    }
+    else return;
+
+    Vector_t u1 = line.point_on_line - edge1.point_on_line;
+    double a    = line.direction_vec * line.direction_vec;
+    double b1   = line.direction_vec * edge1.direction_vec;
+    double c1   = edge1.direction_vec * edge1.direction_vec;
+    double d1   = line.direction_vec * u1;
+    double e1   = edge1.direction_vec * u1;
+    double s1 = (b1*e1- c1*d1) / (a*c1 - b1*b1);
+
+    Vector_t u2 = line.point_on_line - edge2.point_on_line;
+    double b2   = line.direction_vec * edge2.direction_vec;
+    double c2   = edge2.direction_vec * edge2.direction_vec;
+    double d2   = line.direction_vec * u2;
+    double e2   = edge2.direction_vec * u2;
+    double s2 = (b2*e2- c2*d2) / (a*c2 - b2*b2);
+
+    if (s1 < (s2 - EPS)) {
+        min = s1;
+        max = s2;
+    }
+    else {
+        min = s2;
+        max = s1;
+    }
+
+    return;
 }
 
 bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) { 
@@ -54,23 +124,23 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
     Plane_t T0_plane {T0.points[0], T0.points[1], T0.points[2]};
     //std::cout << signed_distance(T1.points[0], T0_plane) << ' ' << signed_distance(T1.points[1], T0_plane) << ' ' << signed_distance(T1.points[2], T0_plane) << std::endl;
 
-    if ( ( signed_distance(T1.points[0], T0_plane) > 0 
+    if ( ( signed_distance(T1.points[0], T0_plane) > EPS 
            && 
-           signed_distance(T1.points[1], T0_plane) > 0 
+           signed_distance(T1.points[1], T0_plane) > EPS 
            && 
-           signed_distance(T1.points[2], T0_plane) > 0   
+           signed_distance(T1.points[2], T0_plane) > EPS   
          )   
          ||
-         ( signed_distance(T1.points[0], T0_plane) < 0 
+         ( signed_distance(T1.points[0], T0_plane) < -EPS 
            && 
-           signed_distance(T1.points[1], T0_plane) < 0 
+           signed_distance(T1.points[1], T0_plane) < -EPS 
            && 
-           signed_distance(T1.points[2], T0_plane) < 0   
+           signed_distance(T1.points[2], T0_plane) < -EPS   
          ) 
         ) {
         //std::cout << "AAAAAAAAAAAA" << std::endl;
         return false;
-        }
+    }
 
     Plane_t T1_plane {T1.points[0], T1.points[1], T1.points[2]};
 
@@ -81,28 +151,30 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
             return false;
     }
 
-    if ( ( signed_distance(T0.points[0], T1_plane) > 0 
+    if ( ( signed_distance(T0.points[0], T1_plane) > EPS
            && 
-           signed_distance(T0.points[1], T1_plane) > 0 
+           signed_distance(T0.points[1], T1_plane) > EPS
            && 
-           signed_distance(T0.points[2], T1_plane) > 0
+           signed_distance(T0.points[2], T1_plane) > EPS
          ) 
          ||
-         ( signed_distance(T0.points[0], T1_plane) < 0 
+         ( signed_distance(T0.points[0], T1_plane) < -EPS 
            && 
-           signed_distance(T0.points[1], T1_plane) < 0 
+           signed_distance(T0.points[1], T1_plane) < -EPS 
            && 
-           signed_distance(T0.points[2], T1_plane) < 0
+           signed_distance(T0.points[2], T1_plane) < -EPS
          ) 
-       )
+       ) {
+        //std::cout << "AAAAAAAAAAAA" << std::endl;
         return false;
+    }
 
     Line_t intersection_line = construct_intersection_line (T0_plane, T1_plane);
 
     double T0_min, T0_max, T1_min, T1_max = std::numeric_limits<double>::quiet_NaN();
     
-    compute_triangle_projection_on_line_segment (T0, intersection_line, T0_min, T0_max);
-    compute_triangle_projection_on_line_segment (T1, intersection_line, T1_min, T1_max);
+    compute_triangle_projection_interval (T0, T1_plane, intersection_line, T0_min, T0_max);
+    compute_triangle_projection_interval (T1, T0_plane, intersection_line, T1_min, T1_max);
 
     if ( T0_max < (T1_min - EPS) || T1_max < (T0_min - EPS) )
         return false;
@@ -126,8 +198,8 @@ bool do_triangles_in_the_same_plane_intersect (const Plane_t& plane, const Trian
         Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{first.points[i1], first.points[i0]}); 
 
         if (perpendicular.degeneracy == Degeneracy_t::NONE) {                                               
-            compute_triangle_projection_on_line_segment ( first, perpendicular,  first_min,  first_max);
-            compute_triangle_projection_on_line_segment (second, perpendicular, second_min, second_max);
+            compute_triangle_projection_on_line ( first, perpendicular,  first_min,  first_max);
+            compute_triangle_projection_on_line (second, perpendicular, second_min, second_max);
 
             if ( first_max < (second_min - EPS) || second_max < (first_min - EPS) )
                 return false;
@@ -138,8 +210,8 @@ bool do_triangles_in_the_same_plane_intersect (const Plane_t& plane, const Trian
         Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{second.points[i1], second.points[i0]});
 
         if (perpendicular.degeneracy == Degeneracy_t::NONE) {
-            compute_triangle_projection_on_line_segment ( first, perpendicular,  first_min,  first_max);
-            compute_triangle_projection_on_line_segment (second, perpendicular, second_min, second_max);
+            compute_triangle_projection_on_line ( first, perpendicular,  first_min,  first_max);
+            compute_triangle_projection_on_line (second, perpendicular, second_min, second_max);
 
             if ( first_max < (second_min - EPS) || second_max < (first_min - EPS) )
                 return false;

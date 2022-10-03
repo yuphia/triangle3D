@@ -106,7 +106,7 @@ TEST (triangleProjectionTest, general)
     Point_t p2 {-8, 18, 13}; 
     Point_t p3 {-4, 8, 5}; 
     double min1, max1;
-    compute_triangle_projection_on_line_segment (Triangle_t {p1, p2, p3}, line1, min1, max1);
+    compute_triangle_projection_on_line (Triangle_t {p1, p2, p3}, line1, min1, max1);
     EXPECT_EQ (min1, -2);
     EXPECT_EQ (max1, 2);
 
@@ -115,7 +115,7 @@ TEST (triangleProjectionTest, general)
     Point_t p5 {-8, 18, 0}; 
     Point_t p6 {-4, 10, -4}; 
     double min2, max2;
-    compute_triangle_projection_on_line_segment (Triangle_t {p4, p5, p6}, line2, min2, max2);
+    compute_triangle_projection_on_line (Triangle_t {p4, p5, p6}, line2, min2, max2);
     EXPECT_EQ (min2, -4);
     EXPECT_EQ (max2, 3);
 
@@ -124,7 +124,7 @@ TEST (triangleProjectionTest, general)
     Point_t p8 {22, -42, 8}; 
     Point_t p9 {-8, 15, 5}; 
     double min3, max3;
-    compute_triangle_projection_on_line_segment (Triangle_t {p7, p8, p9}, line3, min3, max3);
+    compute_triangle_projection_on_line (Triangle_t {p7, p8, p9}, line3, min3, max3);
     EXPECT_EQ (min3, -1);
     EXPECT_EQ (max3, 2);
 
@@ -133,7 +133,7 @@ TEST (triangleProjectionTest, general)
     Point_t p11 {3, 1, 9}; 
     Point_t p12 {-4, 10, 7}; 
     double min4, max4;
-    compute_triangle_projection_on_line_segment (Triangle_t {p10, p11, p12}, line4, min4, max4);
+    compute_triangle_projection_on_line (Triangle_t {p10, p11, p12}, line4, min4, max4);
     EXPECT_EQ (min4, 2);
     EXPECT_EQ (max4, 9);
 }
@@ -175,8 +175,7 @@ TEST (triangleIntersectionTest, general)
 
     Point_t pt13(33.22144, -30.78249, 5.73506);
     Triangle_t triag5(pt13, pt7, pt8);
-    EXPECT_EQ(do_triangles_intersect(triag5, triag4), 1);
-
+    EXPECT_EQ(do_triangles_intersect(triag4, triag5), 0);
 
     Triangle_t triag6(pt12, pt7, pt8);
     EXPECT_EQ(do_triangles_intersect(triag6, triag4), 1);
@@ -193,6 +192,20 @@ TEST (triangleIntersectionTest, general)
     Point_t pt15(10.36104, -17.95187, 5.72534);
     Triangle_t triag9(pt15, pt7, pt8);
     EXPECT_EQ(do_triangles_intersect(triag9, triag4), 0);
+
+
+    Point_t pt16(1, 0, 0);
+    Point_t pt17(-1, -1, 0);
+    Point_t pt18(-1, 1, 0);
+    Triangle_t triag10(pt16, pt17, pt18);
+
+    Point_t pt19(0, 0, 0);
+    Point_t pt20(-1, -1, 1);
+    Point_t pt21(-1, 1, 1);
+    Triangle_t triag11(pt19, pt20, pt21);
+
+    EXPECT_EQ(do_triangles_intersect(triag10, triag11), 1);
+
 }
 
 } //Triangle_intersection_test

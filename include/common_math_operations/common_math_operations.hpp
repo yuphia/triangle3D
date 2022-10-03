@@ -18,6 +18,7 @@ const double EPS = 10e-9;
 
 inline double sqr (const double x);
 inline bool equal_eps (const double x, const double y);
+inline int sign (const double x);
 
 
 inline double sqr (const double x)
@@ -28,6 +29,11 @@ inline double sqr (const double x)
 inline bool equal_eps (const double x, const double y)
 {
     return (fabs(x - y) < EPS);    
+}
+
+inline int sign (const double x)
+{
+    return (x > 0) - (x < 0);   
 }
 
 }
