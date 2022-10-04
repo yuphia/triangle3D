@@ -198,3 +198,5 @@ foreach(APP ${APPS})
 
     message (STATUS "")
 endforeach()
+
+add_subdirectory(gen-test)

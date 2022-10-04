@@ -1,0 +1,1 @@
+add_executable(gen-test generator.cpp)

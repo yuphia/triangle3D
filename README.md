@@ -17,7 +17,7 @@ called `gen-test`
 ### Generating tests
 
 1. Run `./gen-gen/generator` in build directory
-2. Input three numbers: amount of triangles that you want in your test and two bounds for their coordinates.
+2. Input three numbers: amount of triangles that you want in your test and two bounds for their coordinates in specific order : first min, then max.
 
 After that a test file called test.dat is generated directly in build directory. You can run any of the apps using it.
 
