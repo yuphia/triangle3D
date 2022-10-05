@@ -155,12 +155,12 @@ message (STATUS "")
 
 
 foreach (TEST ${TESTS})
-message (STATUS "tests: ${TEST}")
+    message (STATUS "tests: ${TEST}")
 
-target_compile_features(${TEST} PRIVATE cxx_std_17)
+    target_compile_features(${TEST} PRIVATE cxx_std_17)
 
-target_link_options(${TEST} PRIVATE "${FLAGS}")
-    target_compile_options(${TEST} PRIVATE "${WARNS};${FLAGS}")
+    #target_link_options(${TEST} PRIVATE "${FLAGS}")
+    #target_compile_options(${TEST} PRIVATE "${WARNS};${FLAGS}")
     
     target_include_directories(${TEST} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
     target_link_libraries (${TEST} PRIVATE ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
