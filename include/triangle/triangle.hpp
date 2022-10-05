@@ -22,6 +22,8 @@ public:
     };
 
     bool operator== (const Triangle_t& rhs) const;
+    Point_t get_min_point() const;
+    Point_t get_max_point() const;
 };
 
 } // geometry

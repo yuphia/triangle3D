@@ -5,7 +5,7 @@
 #include "line/line.hpp"
 #include "line_segment/line_segment.hpp"
 #include "plane/plane.hpp"
-#include "triangle/triangle.hpp"
+#include "AABB/AABB.hpp" //triangle.hpp is already here
 
 
 namespace geometry

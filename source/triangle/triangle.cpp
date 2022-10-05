@@ -23,5 +23,31 @@ namespace geometry
     bool Triangle_t::operator == (const Triangle_t& rhs) const {
         return ((points[0] == rhs.points[0]) && (points[1] == rhs.points[1]) && (points[2] == rhs.points[2]));
     }
+
+    Point_t Triangle_t::get_min_point() const
+    {
+        double tmpXMin = std::min<double> (points[0].x, points[1].x);
+        tmpXMin        = std::min<double> (points[2].x, tmpXMin);
+        double tmpYMin = std::min<double> (points[0].y, points[1].y);
+        tmpYMin        = std::min<double> (points[2].y, tmpYMin);
+        double tmpZMin = std::min<double> (points[0].z, points[1].z);
+        tmpZMin        = std::min<double> (points[2].z, tmpZMin);
+
+        Point_t pMin {tmpXMin, tmpYMin, tmpZMin};
+        return pMin;
+    }
     
+    Point_t Triangle_t::get_max_point() const
+    {
+        double tmpXMax = std::max<double> (points[0].x, points[1].x);
+        tmpXMax        = std::max<double> (points[2].x, tmpXMax);
+        double tmpYMax = std::max<double> (points[0].y, points[1].y);
+        tmpYMax        = std::max<double> (points[2].y, tmpYMax);
+        double tmpZMax = std::max<double> (points[0].z, points[1].z);
+        tmpZMax        = std::max<double> (points[2].z, tmpZMax);
+
+        Point_t pMax {tmpXMax, tmpYMax, tmpZMax};
+        return pMax;
+    }
+
 }//geometry

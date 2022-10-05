@@ -7,6 +7,7 @@ set(
     line_segment
     triangle
     Triangle_intersection_algorithm
+    AABB
 )
 
 foreach(LIB ${LIBS})

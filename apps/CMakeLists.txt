@@ -1,6 +1,7 @@
 set (
     APPS
     simplest_triangle_comparison_run
+    AABB_triangle_comparison_run
 )
 
 foreach(APP ${APPS})
