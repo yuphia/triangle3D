@@ -6,6 +6,7 @@ set (
     plane_functions_test
     line_segment_functions_test
     line_functions_test
+    AABB_functions_test
 )
 
 foreach (TEST ${TESTS})

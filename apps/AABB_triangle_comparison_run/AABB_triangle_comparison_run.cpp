@@ -38,7 +38,7 @@ int main()
         bool is_intersected_at_all = false;
         for (auto list_iter = triangle_list_unintersected.begin(); list_iter != triangle_list_unintersected.end();)
         {
-            if (geometry::AABB_t::overlap (aabb, list_iter->first.aabb) == true)
+            if (geometry::AABB_joint_Triangle_t::overlap_AABB (triang_and_aabb, list_iter->first) == true)
             {
                 is_curr_intersected = geometry::do_triangles_intersect (triangle, list_iter->first.triangle);
                 if (is_curr_intersected == true)
@@ -61,7 +61,7 @@ int main()
             auto vector_iter = triangle_vector_intersected.begin();
             for (; vector_iter != triangle_vector_intersected.end(); ++vector_iter)
             {
-                if (geometry::AABB_t::overlap (aabb, vector_iter->first.aabb) == true)
+                if (geometry::AABB_joint_Triangle_t::overlap_AABB (triang_and_aabb, vector_iter->first) == true)
                 {
                     is_curr_intersected = geometry::do_triangles_intersect (triangle, vector_iter->first.triangle);
                     if (is_curr_intersected == true)
@@ -86,10 +86,9 @@ int main()
 
     for (auto x: triangle_vector_intersected)
     {
-        std::cout << x.second << " ";
+        std::cout << x.second << "\n";
     }
 
-    std::cout << std::endl;
     return 0;
 }
 

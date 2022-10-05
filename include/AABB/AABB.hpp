@@ -8,11 +8,10 @@ namespace geometry
 
 class AABB_t
 {
-private: 
+public:
     Point_t pMin;
     Point_t pMax;
 
-public:
     AABB_t (const Triangle_t& triangle);
     static bool overlap (const AABB_t& lhs, const AABB_t& rhs)
     {   
@@ -26,11 +25,18 @@ public:
 
 class AABB_joint_Triangle_t
 {
-public:    
-    Triangle_t triangle;
+private:
     AABB_t aabb;
 
-    AABB_joint_Triangle_t (Triangle_t triangle_, AABB_t aabb_) : triangle{triangle_}, aabb{aabb_}{};
+public:    
+    Triangle_t triangle;
+
+    AABB_joint_Triangle_t (Triangle_t triangle_, AABB_t aabb_) : aabb{aabb_}, triangle{triangle_}{};
+
+    static bool overlap_AABB (const AABB_joint_Triangle_t& lhs, const AABB_joint_Triangle_t& rhs) 
+    {
+        return AABB_t::overlap (lhs.aabb    , rhs.aabb);
+    }
 };
 
 } // geometry

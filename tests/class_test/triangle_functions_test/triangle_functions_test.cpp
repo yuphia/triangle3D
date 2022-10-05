@@ -26,7 +26,7 @@ TEST (constructorTesting, test)
     t2.points.push_back(p2);
 
     EXPECT_EQ (t, t2);
-    EXPECT_EQ (t.degeneracy, Degeneracy_t::NONE);
+    EXPECT_EQ (t.degeneracy, Degeneracy_t::LINE_SEGMENT);
 }
 
 TEST (constructorTesting, testDegeneracyToPoint)
@@ -80,6 +80,38 @@ TEST (constructorTesting, testDefaultConstructorDegeneracy)
 }
 
 }
+
+namespace max_min_point_testing
+{
+
+TEST (minTest, minTest1)
+{
+    Point_t p0 {1, 2, 3};
+    Point_t p1 {1, 2, 3};
+    Point_t p2 {2, 4, 6};
+
+    Triangle_t t {p0, p1, p2};   
+
+    Point_t p {1, 2, 3};
+
+    EXPECT_EQ (p, t.get_min_point());
+}
+
+TEST (minTest, minTest2)
+{
+    Point_t p0 {1, 2, 3};
+    Point_t p1 {1, 2, 3};
+    Point_t p2 {2, 4, 6};
+
+    Triangle_t t {p0, p1, p2};   
+
+    Point_t p {2, 4, 6};
+
+    EXPECT_EQ (p, t.get_max_point());
+}
+
+}
+
 }
 }
 }

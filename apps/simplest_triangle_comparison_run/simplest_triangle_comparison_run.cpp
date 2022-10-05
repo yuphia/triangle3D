@@ -77,9 +77,8 @@ int main()
 
     for (auto x: triangle_vector_intersected)
     {
-        std::cout << x.second << " ";
+        std::cout << x.second << "\n";
     }
 
-    std::cout << std::endl;
     return 0;
 }
