@@ -16,6 +16,7 @@ enum class Degeneracy_t { NONE = 0, POINT, NULL_VECTOR, LINE, LINE_SEGMENT, INVA
 
 const double EPS = 10e-9;
 
+
 inline double sqr (const double x);
 inline bool equal_eps (const double x, const double y);
 inline int sign (const double x);

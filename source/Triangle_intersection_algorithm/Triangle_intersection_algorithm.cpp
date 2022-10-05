@@ -61,11 +61,14 @@ void compute_triangle_projection_interval (const Triangle_t& triangle, const Pla
                 min = point_on_line_projection_coeff (triangle.points[i0], line);
                 max = point_on_line_projection_coeff (triangle.points[i2], line);
             }
+            else if (sign (signed_distance (triangle.points[i1], other_triangle_plane)) == sign (signed_distance (triangle.points[i2], other_triangle_plane))) {
+                min = max = point_on_line_projection_coeff (triangle.points[i0], line);
+            }
             else {
                 min = point_on_line_projection_coeff (triangle.points[i0], line);
-                
+
                 Line_t edge {triangle.points[i1], triangle.points[i2]};
-                double a    = line.direction_vec * line.direction_vec;
+                double a   = line.direction_vec * line.direction_vec;  
                 Vector_t u = line.point_on_line - edge.point_on_line;
                 double b   = line.direction_vec * edge.direction_vec;
                 double c   = edge.direction_vec * edge.direction_vec;
@@ -80,7 +83,6 @@ void compute_triangle_projection_interval (const Triangle_t& triangle, const Pla
                 min = temp;
             }
 
-            //std::cout << min << ' ' << max << std::endl;
             return;
         }
     }
