@@ -31,11 +31,16 @@ private:
 public:    
     Triangle_t triangle;
 
-    AABB_joint_Triangle_t (Triangle_t triangle_, AABB_t aabb_) : aabb{aabb_}, triangle{triangle_}{};
+    AABB_joint_Triangle_t (Triangle_t triangle_, AABB_t aabb_) : aabb{triangle_}, triangle{triangle_.points[0], triangle_.points[1], triangle_.points[2]}{};
 
     static bool overlap_AABB (const AABB_joint_Triangle_t& lhs, const AABB_joint_Triangle_t& rhs) 
     {
-        return AABB_t::overlap (lhs.aabb    , rhs.aabb);
+        return AABB_t::overlap (lhs.aabb, rhs.aabb);
+    }
+
+    AABB_t& get_AABB()
+    {
+        return aabb;
     }
 };
 

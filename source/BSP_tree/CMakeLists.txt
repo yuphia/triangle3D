@@ -1,0 +1,1 @@
+add_library (BSP_tree BSP_tree.cpp)

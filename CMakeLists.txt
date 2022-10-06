@@ -181,7 +181,7 @@ message (STATUS "\n////////////////")
 message (STATUS "Collected APPS: ${APPS}")
     
 foreach(APP ${APPS})
-    message (STATUS "    app: ${APP}")
+    message (STATUS "app: ${APP}")
 
     target_compile_features(${APP} PRIVATE cxx_std_17)
 
@@ -194,6 +194,12 @@ foreach(APP ${APPS})
     get_property(dirs TARGET ${APP} PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
     foreach(dir ${dirs})
         message(STATUS "    ${APP} includes dir = '${dir}'")    
+    endforeach()
+
+    get_target_property(OUT ${APP} LINK_LIBRARIES)
+    
+    foreach(LIB ${OUT})
+        message(STATUS "    linked: ${LIB}")
     endforeach()
 
     message (STATUS "")

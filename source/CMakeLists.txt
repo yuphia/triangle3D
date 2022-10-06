@@ -6,8 +6,9 @@ set(
     plane
     line_segment
     triangle
-    Triangle_intersection_algorithm
     AABB
+    BSP_tree
+    Triangle_intersection_algorithm
 )
 
 foreach(LIB ${LIBS})
