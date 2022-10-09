@@ -21,9 +21,9 @@ TEST (constructorTesting, test)
     Triangle_t t {p0, p1, p2};
     Triangle_t t2;
     
-    t2.points.push_back(p0);
-    t2.points.push_back(p1);
-    t2.points.push_back(p2);
+    t2.points[0] = p0;
+    t2.points[1] = p1;
+    t2.points[2] = p2;
 
     EXPECT_EQ (t, t2);
     EXPECT_EQ (t.degeneracy, Degeneracy_t::LINE_SEGMENT);

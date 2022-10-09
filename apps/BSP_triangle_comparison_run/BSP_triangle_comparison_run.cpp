@@ -7,7 +7,7 @@ int main()
     std::cin >> amount;
     assert (std::cin.good());
 
-    std::list <geometry::AABB_Triag_index> triangles{};
+    std::vector <geometry::AABB_Triag_index> triangles{};
 
     double x, y, z;
     for (size_t i = 0; i < amount; i++)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Triangle_intersection_algorithm/Triangle_intersection_algorithm.hpp"
-#include <list>
+#include <vector>
 #include <unordered_map>
 
 namespace geometry
@@ -12,14 +12,14 @@ using AABB_Triag_index = std::pair <AABB_joint_Triangle_t, int>;
 class BSP_tree_node
 {
 private:
-    std::list<AABB_Triag_index> triangles;
+    std::vector<AABB_Triag_index> triangles;
 
-    std::list<AABB_Triag_index> front;
-    std::list<AABB_Triag_index> back;
+    std::vector<AABB_Triag_index> front;
+    std::vector<AABB_Triag_index> back;
 
 public:
-    void run_algo (std::list<AABB_Triag_index>& candidates, std::unordered_map<int, int>& already_intersected);
-    BSP_tree_node (std::list<AABB_Triag_index>& triangles_) : triangles{}
+    void run_algo (std::vector<AABB_Triag_index>& candidates, std::unordered_map<int, int>& already_intersected);
+    BSP_tree_node (std::vector<AABB_Triag_index>& triangles_) : triangles{}
     {
         for (auto& x : triangles_)
         {
@@ -37,12 +37,12 @@ class BSP_tree
 private:
     
     BSP_tree_node root;
-    std::list<AABB_Triag_index> candidates;
+    std::vector<AABB_Triag_index> candidates;
     std::unordered_map<int, int> already_intersected;
 
 public:
 
-    BSP_tree (std::list<AABB_Triag_index>& all_triangles) : 
+    BSP_tree (std::vector<AABB_Triag_index>& all_triangles) : 
                                             root {all_triangles}
     {
         for (auto& x : all_triangles)
@@ -58,6 +58,6 @@ public:
     void run_algo ();
 };
 
-void run_algo_n_squared (std::list<AABB_Triag_index> triangles, std::unordered_map<int, int>& already_intersected);
+void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::unordered_map<int, int>& already_intersected);
 
 } // geometry

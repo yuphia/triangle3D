@@ -10,7 +10,7 @@ void BSP_tree::run_algo ()
     root.run_algo (candidates, already_intersected);
 }
 
-void BSP_tree_node::run_algo (std::list<AABB_Triag_index>& candidates, std::unordered_map<int, int>& already_intersected)
+void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::unordered_map<int, int>& already_intersected)
 {
     if (triangles.size() <= 1 && candidates.size() <= 1)
         return;
@@ -68,8 +68,8 @@ void BSP_tree_node::run_algo (std::list<AABB_Triag_index>& candidates, std::unor
             
             intersected++;
             
-            auto it = already_intersected.find (t.second);
-            if (it == already_intersected.end() && AABB_joint_Triangle_t::overlap_AABB (splitter, t.first) == true)
+            auto it_hash = already_intersected.find (t.second);
+            if (it_hash == already_intersected.end() && AABB_joint_Triangle_t::overlap_AABB (splitter, t.first) == true)
                 if (do_triangles_intersect (splitter.triangle, t.first.triangle))
                 {
                     already_intersected.insert ({t.second, t.second});
@@ -85,10 +85,6 @@ void BSP_tree_node::run_algo (std::list<AABB_Triag_index>& candidates, std::unor
         already_intersected.insert ({splitter_number, splitter_number});
         std::cout << splitter_number << std::endl;  
     }
-
-//    std::cout <<       "front: " << front.size() << std::endl; 
-//    std::cout <<        "back: " <<  back.size() << std::endl;
-//    std::cout << "intersected: " <<  intersected << std::endl;
 
     if ((static_cast<int> (front.size()) - 150 < intersected) &&
         (static_cast<int> (back.size())  - 150 < intersected))
@@ -106,7 +102,7 @@ void BSP_tree_node::run_algo (std::list<AABB_Triag_index>& candidates, std::unor
 
 }
 
-void run_algo_n_squared (std::list<AABB_Triag_index> triangles, std::unordered_map<int, int>& already_intersected)
+void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::unordered_map<int, int>& already_intersected)
 {
     assert (std::cin.good());
 
