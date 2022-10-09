@@ -13,12 +13,15 @@ int main()
     for (size_t i = 0; i < amount; i++)
     {
         std::cin >> x >> y >> z;
+        assert (static_cast<bool> (std::cin));
         geometry::Point_t p0 {x, y, z};
 
         std::cin >> x >> y >> z;
+        assert (static_cast<bool> (std::cin));
         geometry::Point_t p1 {x, y, z};
  
         std::cin >> x >> y >> z;
+        assert (static_cast<bool> (std::cin));
         geometry::Point_t p2 {x, y, z};        
 
         geometry::Triangle_t triangle {p0, p1, p2};
