@@ -86,8 +86,9 @@ void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::un
         std::cout << splitter_number << std::endl;  
     }
 
-    if ((static_cast<int> (front.size()) - 150 < intersected) &&
-        (static_cast<int> (back.size())  - 150 < intersected))
+    if ( (static_cast<int> (candidates.size())/2 < intersected) ||
+        ((static_cast<int> (front.size()) - 150 < intersected) &&
+         (static_cast<int>  (back.size()) - 150 < intersected)))
     {    
         run_algo_n_squared (candidates, already_intersected);
         return;
@@ -96,7 +97,6 @@ void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::un
     BSP_tree_node front_node {front};
     BSP_tree_node  back_node { back};
 
-//    sleep (1);
     front_node.run_algo (front, already_intersected);
     back_node. run_algo (back, already_intersected);
 
@@ -104,42 +104,74 @@ void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::un
 
 void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::unordered_map<int, int>& already_intersected)
 {
-    assert (std::cin.good());
+    assert (static_cast<bool> (std::cin));
 
-    auto it_end = triangles.end();
-    auto it_hash_end = already_intersected.end();
+    std::list<AABB_Triag_index> triangle_list_unintersected;
+    std::vector<AABB_Triag_index> triangle_vector_intersected;
 
-    for (auto it0 = triangles.begin(); it0 != it_end; ++it0)
+    for (auto &x : triangles)
     {
-        auto is_int_i0 = already_intersected.find (it0->second);
-        for (auto it1 = triangles.begin(); it1 != it_end; ++it1)
+        bool is_intersected_at_all = false;
+        bool is_curr_intersected = false;
+
+        auto it_in_hash = already_intersected.find (x.second);
+        if (it_in_hash == already_intersected.end())
         {
-            if (it0 != it1)
-            {
-                auto is_int_i1 = already_intersected.find (it1->second);
-
-                if (is_int_i0 == already_intersected.end() || is_int_i1 == already_intersected.end())
+            for (auto list_iter = triangle_list_unintersected.begin(); list_iter != triangle_list_unintersected.end();)
                 {
-                    if (AABB_joint_Triangle_t::overlap_AABB (it0->first, it1->first))
-                        if (do_triangles_intersect (it0->first.triangle, it1->first.triangle))
+                    if (geometry::AABB_joint_Triangle_t::overlap_AABB (x.first, list_iter->first) == true)
+                    {
+                        is_curr_intersected = geometry::do_triangles_intersect (x.first.triangle, list_iter->first.triangle);
+                        if (is_curr_intersected == true)
                         {
-                            if (is_int_i0 == it_hash_end)
-                            {
-                                std::cout << it0->second << std::endl;
-                                already_intersected.insert ({it0->second, it0->second});
-                                is_int_i0 = already_intersected.find (it0->second);
-                            }
+                            is_intersected_at_all = true;
 
-                            if (is_int_i1 == it_hash_end)
-                            {
-                                std::cout << it1->second << std::endl;
-                                already_intersected.insert ({it1->second, it1->second});
-                            }
+                            triangle_vector_intersected.push_back (*list_iter);
+                            already_intersected.insert ({list_iter->second, list_iter->second});
+                            triangle_list_unintersected.erase (list_iter);   
+
+                            std::cout << list_iter->second << std::endl;
+                            break;
                         }
+                        else
+                            ++list_iter;
+                    }
+                    else
+                        ++list_iter;
+                }
+
+            if (is_intersected_at_all == false)
+            {   
+                auto vector_iter = triangle_vector_intersected.begin();
+                for (; vector_iter != triangle_vector_intersected.end(); ++vector_iter)
+                {
+                    if (geometry::AABB_joint_Triangle_t::overlap_AABB (x.first, vector_iter->first) == true)
+                    {
+                        is_curr_intersected = geometry::do_triangles_intersect (x.first.triangle, vector_iter->first.triangle);
+                        if (is_curr_intersected == true)
+                        {
+                            triangle_vector_intersected.push_back (x);
+                            std::cout << x.second << std::endl;
+                            already_intersected.insert ({x.second, x.second});
+                            is_intersected_at_all = true;
+                            break;
+                        }
+                    }
                 }
             }
+            else 
+            {
+                std::cout << x.second << std::endl;
+                triangle_vector_intersected.push_back (x);
+                already_intersected.insert ({x.second, x.second});
+            }
+
+            if (!is_intersected_at_all)
+                triangle_list_unintersected.push_back (x);
         }
-    }
+    }   
+
+
 }
 
 } //geometry

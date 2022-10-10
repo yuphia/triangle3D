@@ -21,7 +21,7 @@ int main()
 
         for (int j = 0; j < 3; j++)
             for (int k = 0; k < 3; k++)
-                testDataFile << static_cast<double> (rand() / RAND_MAX * (max - min) + min) << " ";
+                testDataFile << static_cast<double> (rand()) / RAND_MAX * (max - min) + min << " ";
     }
     
     testDataFile << std::endl;

@@ -3,6 +3,7 @@
 #include "Triangle_intersection_algorithm/Triangle_intersection_algorithm.hpp"
 #include <vector>
 #include <unordered_map>
+#include <list>
 
 namespace geometry
 {
