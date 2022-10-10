@@ -36,7 +36,7 @@ void compute_triangle_projection_on_line (const Triangle_t& triangle, const Line
     min = max = point_on_line_projection_coeff (triangle.points[0], line);
     double term = min;
     
-    for (size_t i = 1; i < triangle.nVertices; i++) {
+    for (size_t i = 1; i < 3; i++) {
         term = point_on_line_projection_coeff (triangle.points[i], line);
         if ( term < (min - EPS) )
             min = term;
@@ -147,6 +147,8 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
 
     Plane_t T0_plane {T0.points[0], T0.points[1], T0.points[2]};
     //std::cout << signed_distance(T1.points[0], T0_plane) << ' ' << signed_distance(T1.points[1], T0_plane) << ' ' << signed_distance(T1.points[2], T0_plane) << std::endl;
+    //std::cout << T1.points[0].x << ' ' << T1.points[1].x << ' ' << T1.points[2].x << std::endl;
+    //std::cout << T0.points[0].x << ' ' << T0.points[1].x << ' ' << T0.points[2].x << std::endl;
 
     if ( ( signed_distance(T1.points[0], T0_plane) > EPS 
            && 
@@ -220,7 +222,7 @@ bool do_triangles_in_the_same_plane_intersect (const Plane_t& plane, const Trian
     
     double first_min, first_max, second_min, second_max;
 
-    for (size_t i0 = 0, i1 = first.nVertices - 1; i0 < first.nVertices; i1 = i0, i0++) {
+    for (size_t i0 = 0, i1 = 2; i0 < 3; i1 = i0, i0++) {
         Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{first.points[i1], first.points[i0]}); 
 
         if (perpendicular.degeneracy == Degeneracy_t::NONE) {                                               
@@ -232,7 +234,7 @@ bool do_triangles_in_the_same_plane_intersect (const Plane_t& plane, const Trian
         }
     }
 
-    for (size_t i0 = 0, i1 = second.nVertices - 1; i0 < second.nVertices; i1 = i0, i0++) {
+    for (size_t i0 = 0, i1 = 2; i0 < 3; i1 = i0, i0++) {
         Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{second.points[i1], second.points[i0]});
 
         if (perpendicular.degeneracy == Degeneracy_t::NONE) {

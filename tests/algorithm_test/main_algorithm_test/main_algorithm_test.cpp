@@ -205,7 +205,6 @@ TEST (triangleIntersectionTest, general)
     Triangle_t triag11(pt19, pt20, pt21);
 
     EXPECT_EQ(do_triangles_intersect(triag10, triag11), 1);
-
 }
 
 } //Triangle_intersection_test

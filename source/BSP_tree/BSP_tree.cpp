@@ -124,24 +124,26 @@ void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::unordered
     for (auto &x : triangles)
     {
         bool is_intersected_at_all = false;
+        bool is_curr_intersected = false;
+        is_intersected_at_all = check_intersection_with_all_unintersected (x, triangle_list_unintersected, triangle_vector_intersected, already_intersected);
 
-        auto it_in_hash = already_intersected.find (x.second);
-        if (it_in_hash == already_intersected.end())
+        if (is_intersected_at_all == false)   
+            is_intersected_at_all = check_intersection_with_intersected (x, triangle_list_unintersected, triangle_vector_intersected, already_intersected);
+        else 
         {
-            bool is_curr_intersected = false;
-            is_intersected_at_all = check_intersection_with_all_unintersected (x, triangle_list_unintersected, triangle_vector_intersected, already_intersected);
-
-            if (is_intersected_at_all == false)   
-                is_intersected_at_all = check_intersection_with_intersected (x, triangle_list_unintersected, triangle_vector_intersected, already_intersected);
-            else 
+            auto it_hash = already_intersected.find (x.second);
+            if (it_hash == already_intersected.end())
             {
                 std::cout << x.second << std::endl;
-                triangle_vector_intersected.push_back (x);
                 already_intersected.insert ({x.second, x.second});
             }
 
-            if (!is_intersected_at_all)
-                triangle_list_unintersected.push_back (x);
+            triangle_vector_intersected.push_back (x);
+        }
+
+        if (!is_intersected_at_all)
+        {
+            triangle_list_unintersected.push_back (x);
         }
     }   
 }
@@ -164,11 +166,15 @@ bool check_intersection_with_all_unintersected (AABB_Triag_index& x,
                 is_intersected_at_all = true;
 
                 triangle_vector_intersected.push_back (*list_iter);
-                already_intersected.insert ({list_iter->second, list_iter->second});
-                triangle_list_unintersected.erase (list_iter);   
+                auto it_hash = already_intersected.find (list_iter->second);
+                if (it_hash == already_intersected.end())
+                {
+                    already_intersected.insert ({list_iter->second, list_iter->second});
+                    std::cout << list_iter->second << std::endl;
+                }
 
-                std::cout << list_iter->second << std::endl;
-                break;
+                auto it_to_erase = list_iter++;
+                triangle_list_unintersected.erase (it_to_erase);   
             }
             else
                 ++list_iter;
@@ -197,8 +203,14 @@ bool check_intersection_with_intersected (AABB_Triag_index& x,
             if (is_curr_intersected == true)
             {
                 triangle_vector_intersected.push_back (x);
-                std::cout << x.second << std::endl;
-                already_intersected.insert ({x.second, x.second});
+
+                auto it_hash = already_intersected.find (vector_iter->second);
+                if (it_hash == already_intersected.end())
+                {
+                    std::cout << x.second << std::endl;
+                    already_intersected.insert ({x.second, x.second});
+                }
+
                 is_intersected_at_all = true;
                 break;
             }
