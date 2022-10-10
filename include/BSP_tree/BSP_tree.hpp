@@ -18,6 +18,10 @@ private:
     std::vector<AABB_Triag_index> front;
     std::vector<AABB_Triag_index> back;
 
+    std::vector<AABB_Triag_index>::iterator find_splitter (std::vector<AABB_Triag_index>& candidates, bool& found_splitter);
+    int bisect_and_print_intersected (std::vector<AABB_Triag_index>& candidates, const AABB_Triag_index& splitter, 
+                                      std::unordered_map<int, int>& already_intersected, bool& does_splitter_intersect);
+
 public:
     void run_algo (std::vector<AABB_Triag_index>& candidates, std::unordered_map<int, int>& already_intersected);
     BSP_tree_node (std::vector<AABB_Triag_index>& triangles_) : triangles{}
@@ -60,5 +64,12 @@ public:
 };
 
 void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::unordered_map<int, int>& already_intersected);
-
+bool check_intersection_with_all_unintersected (AABB_Triag_index& x, 
+                                                std::list<AABB_Triag_index>& triangle_list_unintersected,
+                                                std::vector<AABB_Triag_index> triangle_vector_intersected,
+                                                std::unordered_map<int, int>& already_intersected);
+bool check_intersection_with_intersected (AABB_Triag_index& x, 
+                                          std::list<AABB_Triag_index>& triangle_list_unintersected,
+                                          std::vector<AABB_Triag_index> triangle_vector_intersected,
+                                          std::unordered_map<int, int>& already_intersected);
 } // geometry
