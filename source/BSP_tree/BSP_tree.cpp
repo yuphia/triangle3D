@@ -155,8 +155,6 @@ void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::map<int, 
         if (!is_intersected_at_all)
         {
             triangle_list_unintersected.push_back (x);
-
-            already_intersected.insert ({x.second, x.second});
         }
     }   
 }
