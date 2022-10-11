@@ -21,7 +21,7 @@ public:
         degeneracy = Degeneracy_t::INVALID;
     };
 
-    Triangle_t (const Triangle_t& triag) : points {triag.points[0], triag.points[1], triag.points[2]}{};
+/*    Triangle_t (const Triangle_t& triag) : points {triag.points[0], triag.points[1], triag.points[2]}{};
 
     Triangle_t& operator= (const Triangle_t& triag)
     {
@@ -29,7 +29,7 @@ public:
             points[i] = triag.points[i];
 
         return *this;
-    }
+    }*/
 
     bool operator== (const Triangle_t& rhs) const;
     Point_t get_min_point() const;

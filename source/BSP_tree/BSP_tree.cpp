@@ -5,14 +5,26 @@
 namespace geometry
 {
 
+struct
+{
+    bool operator()(const AABB_Triag_index &lhs, const AABB_Triag_index &rhs) 
+    {
+        return lhs.second < rhs.second; // assumes that the implementation uses a flat address space
+    }
+} custom_less;
+
 void BSP_tree::run_algo ()
 {
     root.run_algo (candidates, already_intersected);
+    for (auto x : already_intersected)
+    {
+        std::cout << x.second << std::endl;
+    }
 }
 
-void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::unordered_map<int, int>& already_intersected)
+void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::map<int, int>& already_intersected)
 {
-    if (triangles.size() <= 1 && candidates.size() <= 1)
+    if (candidates.size() <= 1)
         return;
 
     int intersected = 0;
@@ -37,18 +49,17 @@ void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::un
     if (it1 == already_intersected.end() && does_splitter_intersect == true)
     {
         already_intersected.insert ({splitter.second, splitter.second});
-        std::cout << splitter.second << std::endl;  
     }
 
     if ((static_cast<int> (candidates.size())/2 < intersected) ||
         ((static_cast<int> (front.size()) - 150 < intersected) && (static_cast<int>  (back.size()) - 150 < intersected)))
-    {    
+    {   
         run_algo_n_squared (candidates, already_intersected);
         return;
     }
 
-    BSP_tree_node front_node {front};
-    BSP_tree_node  back_node { back};
+    BSP_tree_node front_node;
+    BSP_tree_node  back_node;
 
     front_node.run_algo (front, already_intersected);
     back_node. run_algo (back, already_intersected);
@@ -60,24 +71,27 @@ std::vector<AABB_Triag_index>::iterator BSP_tree_node::find_splitter (std::vecto
     auto it = candidates.begin();
     for (auto it_ender = it; it_ender != candidates.end (); ++it_ender)
     {
-        ++it;
         if(it->first.triangle.degeneracy == Degeneracy_t::NONE)
         {
             it_ender = --candidates.end();
             found_splitter = true;
         }
+        else
+            ++it;
     }
 
     return it;
 }
 
 int BSP_tree_node::bisect_and_print_intersected (std::vector<AABB_Triag_index>& candidates, const AABB_Triag_index& splitter, 
-                                                 std::unordered_map<int, int>& already_intersected, bool& does_splitter_intersect)
+                                                 std::map<int, int>& already_intersected, bool& does_splitter_intersect)
 {
     int intersected = 0;
     Plane_t splitter_plane {splitter.first.triangle.points[0], 
                             splitter.first.triangle.points[1], 
                             splitter.first.triangle.points[2]};
+
+    static int i = 0;
 
     for (auto& t : candidates)
     {
@@ -99,23 +113,25 @@ int BSP_tree_node::bisect_and_print_intersected (std::vector<AABB_Triag_index>& 
             front.push_back (t);
             
             intersected++;
-            
             auto it_hash = already_intersected.find (t.second);
-            if (it_hash == already_intersected.end() && AABB_joint_Triangle_t::overlap_AABB (splitter.first, t.first) == true)
+            if (it_hash == already_intersected.end() && AABB_joint_Triangle_t::overlap_AABB (splitter.first, t.first))
+            {
                 if (do_triangles_intersect (splitter.first.triangle, t.first.triangle))
                 {
                     already_intersected.insert ({t.second, t.second});
-                    std::cout << t.second << std::endl;
                     does_splitter_intersect = true;
                 }
+            }
+            else i++;
         }
     }
 
     return intersected;
 }
 
-void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::unordered_map<int, int>& already_intersected)
+void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::map<int, int>& already_intersected)
 {
+    std::sort (triangles.begin(), triangles.end(), custom_less);
     assert (static_cast<bool> (std::cin));
 
     std::list<AABB_Triag_index> triangle_list_unintersected;
@@ -131,12 +147,7 @@ void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::unordered
             is_intersected_at_all = check_intersection_with_intersected (x, triangle_list_unintersected, triangle_vector_intersected, already_intersected);
         else 
         {
-            auto it_hash = already_intersected.find (x.second);
-            if (it_hash == already_intersected.end())
-            {
-                std::cout << x.second << std::endl;
-                already_intersected.insert ({x.second, x.second});
-            }
+            already_intersected.insert ({x.second, x.second});
 
             triangle_vector_intersected.push_back (x);
         }
@@ -144,6 +155,8 @@ void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::unordered
         if (!is_intersected_at_all)
         {
             triangle_list_unintersected.push_back (x);
+
+            already_intersected.insert ({x.second, x.second});
         }
     }   
 }
@@ -151,7 +164,7 @@ void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::unordered
 bool check_intersection_with_all_unintersected (AABB_Triag_index& x, 
                                                 std::list<AABB_Triag_index>& triangle_list_unintersected,
                                                 std::vector<AABB_Triag_index> triangle_vector_intersected,
-                                                std::unordered_map<int, int>& already_intersected)
+                                                std::map<int, int>& already_intersected)
 {
     bool is_curr_intersected = false;
     bool is_intersected_at_all = false;
@@ -164,16 +177,12 @@ bool check_intersection_with_all_unintersected (AABB_Triag_index& x,
             if (is_curr_intersected == true)
             {
                 is_intersected_at_all = true;
-
                 triangle_vector_intersected.push_back (*list_iter);
-                auto it_hash = already_intersected.find (list_iter->second);
-                if (it_hash == already_intersected.end())
-                {
-                    already_intersected.insert ({list_iter->second, list_iter->second});
-                    std::cout << list_iter->second << std::endl;
-                }
 
-                auto it_to_erase = list_iter++;
+                already_intersected.insert ({list_iter->second, list_iter->second});
+
+                auto it_to_erase = list_iter;
+                list_iter++;
                 triangle_list_unintersected.erase (it_to_erase);   
             }
             else
@@ -189,7 +198,7 @@ bool check_intersection_with_all_unintersected (AABB_Triag_index& x,
 bool check_intersection_with_intersected (AABB_Triag_index& x, 
                                           std::list<AABB_Triag_index>& triangle_list_unintersected,
                                           std::vector<AABB_Triag_index> triangle_vector_intersected,
-                                          std::unordered_map<int, int>& already_intersected)
+                                          std::map<int, int>& already_intersected)
 {
     bool is_curr_intersected = false;
     bool is_intersected_at_all = false;
@@ -204,12 +213,7 @@ bool check_intersection_with_intersected (AABB_Triag_index& x,
             {
                 triangle_vector_intersected.push_back (x);
 
-                auto it_hash = already_intersected.find (vector_iter->second);
-                if (it_hash == already_intersected.end())
-                {
-                    std::cout << x.second << std::endl;
-                    already_intersected.insert ({x.second, x.second});
-                }
+                already_intersected.insert ({x.second, x.second});
 
                 is_intersected_at_all = true;
                 break;
