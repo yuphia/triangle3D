@@ -7,10 +7,8 @@
 namespace geometry
 {
 
-class Triangle_t
+struct Triangle_t
 {
-
-public:
     std::array<Point_t, 3> points;
 
     Degeneracy_t degeneracy = Degeneracy_t::POIZON;
@@ -20,16 +18,6 @@ public:
     {
         degeneracy = Degeneracy_t::INVALID;
     };
-
-/*    Triangle_t (const Triangle_t& triag) : points {triag.points[0], triag.points[1], triag.points[2]}{};
-
-    Triangle_t& operator= (const Triangle_t& triag)
-    {
-        for (int i = 0; i < 3; i++)
-            points[i] = triag.points[i];
-
-        return *this;
-    }*/
 
     bool operator== (const Triangle_t& rhs) const;
     Point_t get_min_point() const;

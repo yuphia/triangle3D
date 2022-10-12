@@ -6,10 +6,8 @@
 namespace geometry
 {
 
-class Vector_t
+struct Vector_t
 {
-public:
-    //double length = std::numeric_limits<double>::quiet_NaN();
     double x = std::numeric_limits<double>::quiet_NaN();
     double y = std::numeric_limits<double>::quiet_NaN(); 
     double z = std::numeric_limits<double>::quiet_NaN();

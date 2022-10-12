@@ -5,9 +5,7 @@
 namespace geometry
 {
 
-class Plane_t {
-
-public:
+struct Plane_t {
     Vector_t normal;
     double d = std::numeric_limits<double>::quiet_NaN();
     

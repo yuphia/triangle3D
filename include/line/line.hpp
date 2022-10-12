@@ -6,9 +6,8 @@
 namespace geometry
 {
 
-class Line_t
+struct Line_t
 {
-public:
     Vector_t direction_vec;
     Vector_t point_on_line;
 

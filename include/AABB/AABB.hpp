@@ -6,9 +6,8 @@
 namespace geometry
 {
 
-class AABB_t
+struct AABB_t
 {
-public:
     Point_t pMin;
     Point_t pMax;
 
