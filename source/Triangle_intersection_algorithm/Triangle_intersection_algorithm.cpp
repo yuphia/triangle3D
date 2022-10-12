@@ -46,7 +46,11 @@ void compute_triangle_projection_on_line (const Triangle_t& triangle, const Line
 
 void compute_triangle_projection_interval (const Triangle_t& triangle, const Plane_t& other_triangle_plane, const Line_t& line, double& min, double& max) {
 
-    for (size_t i0 = 0, i1 = 1, i2 = 2; i0 < 3; i1 = i2, i2 = i0, i0++) {
+    for (size_t i0_raw = 0, i1_raw = 1, i2_raw = 2; i0_raw < 3; i0_raw++, i1_raw++, i2_raw++) {
+        size_t i0 = i0_raw % 3, 
+               i1 = i1_raw % 3, 
+               i2 = i2_raw % 3;
+
         if ( equal_eps (signed_distance(triangle.points[i0], other_triangle_plane), 0.0) ) {
             
             if ( equal_eps (signed_distance(triangle.points[i1], other_triangle_plane), 0.0) ) {
@@ -206,22 +210,13 @@ bool do_triangles_in_the_same_plane_intersect (const Plane_t& plane, const Trian
     
     double first_min, first_max, second_min, second_max;
 
-    for (size_t i0 = 0, i1 = 2; i0 < 3; i1 = i0, i0++) {
+    for (size_t i0_raw = 0, i1_raw = 1; i0_raw < 3; i0_raw++, i1_raw++) {
+        size_t i0 = i0_raw % 3,
+               i1 = i1_raw % 3;
+
         Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{first.points[i1], first.points[i0]}); 
 
         if (perpendicular.degeneracy == Degeneracy_t::NONE) {                                               
-            compute_triangle_projection_on_line ( first, perpendicular,  first_min,  first_max);
-            compute_triangle_projection_on_line (second, perpendicular, second_min, second_max);
-
-            if ( first_max < (second_min - EPS) || second_max < (first_min - EPS) )
-                return false;
-        }
-    }
-
-    for (size_t i0 = 0, i1 = 2; i0 < 3; i1 = i0, i0++) {
-        Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{second.points[i1], second.points[i0]});
-
-        if (perpendicular.degeneracy == Degeneracy_t::NONE) {
             compute_triangle_projection_on_line ( first, perpendicular,  first_min,  first_max);
             compute_triangle_projection_on_line (second, perpendicular, second_min, second_max);
 
