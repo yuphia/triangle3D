@@ -46,10 +46,10 @@ void compute_triangle_projection_on_line (const Triangle_t& triangle, const Line
 
 void compute_triangle_projection_interval (const Triangle_t& triangle, const Plane_t& other_triangle_plane, const Line_t& line, double& min, double& max) {
 
-    for (size_t i0_raw = 0, i1_raw = 1, i2_raw = 2; i0_raw < 3; i0_raw++, i1_raw++, i2_raw++) {
+    for (size_t i0_raw = 0; i0_raw < 3; i0_raw++) {
         size_t i0 = i0_raw % 3, 
-               i1 = i1_raw % 3, 
-               i2 = i2_raw % 3;
+               i1 = (i0_raw + 1) % 3, 
+               i2 = (i0_raw + 2) % 3;
 
         if ( equal_eps (signed_distance(triangle.points[i0], other_triangle_plane), 0.0) ) {
             
@@ -108,21 +108,8 @@ void compute_triangle_projection_interval (const Triangle_t& triangle, const Pla
         return;
     }
 
-    double a    = line.direction_vec * line.direction_vec;
-
-    Vector_t u1 = line.point_on_line - edge1.point_on_line;
-    double b1   = line.direction_vec * edge1.direction_vec;
-    double c1   = edge1.direction_vec * edge1.direction_vec;
-    double d1   = line.direction_vec * u1;
-    double e1   = edge1.direction_vec * u1;
-    double s1 = (b1*e1- c1*d1) / (a*c1 - b1*b1);
-
-    Vector_t u2 = line.point_on_line - edge2.point_on_line;
-    double b2   = line.direction_vec * edge2.direction_vec;
-    double c2   = edge2.direction_vec * edge2.direction_vec;
-    double d2   = line.direction_vec * u2;
-    double e2   = edge2.direction_vec * u2;
-    double s2 = (b2*e2- c2*d2) / (a*c2 - b2*b2);
+    double s1 = calc_projection (line, edge1);
+    double s2 = calc_projection (line, edge2);
 
     if (s1 < (s2 - EPS)) {
         min = s1;
@@ -134,6 +121,19 @@ void compute_triangle_projection_interval (const Triangle_t& triangle, const Pla
     }
 
     return;
+}
+
+double calc_projection (const Line_t& line, const Line_t& edge)
+{
+    double a    = line.direction_vec * line.direction_vec;
+
+    Vector_t u = line.point_on_line - edge.point_on_line;
+    double b   = line.direction_vec * edge.direction_vec;
+    double c   = edge.direction_vec * edge.direction_vec;
+    double d   = line.direction_vec * u;
+    double e   = edge.direction_vec * u;
+    double s = (b*e- c*d) / (a*c - b*b);
+    return s;
 }
 
 bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) { 
@@ -210,9 +210,9 @@ bool do_triangles_in_the_same_plane_intersect (const Plane_t& plane, const Trian
     
     double first_min, first_max, second_min, second_max;
 
-    for (size_t i0_raw = 0, i1_raw = 1; i0_raw < 3; i0_raw++, i1_raw++) {
+    for (size_t i0_raw = 0; i0_raw < 3; i0_raw++) {
         size_t i0 = i0_raw % 3,
-               i1 = i1_raw % 3;
+               i1 = (i0_raw+1) % 3;
 
         Line_t perpendicular = construct_perpendicular_line_in_plane (plane, Line_t{first.points[i1], first.points[i0]}); 
 

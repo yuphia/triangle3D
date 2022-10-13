@@ -19,6 +19,7 @@ namespace geometry
     void            compute_triangle_projection_on_line             (const Triangle_t& triangle, const Line_t& line, double& min, double& max); //  
     void            compute_triangle_projection_interval            (const Triangle_t& triangle, const Plane_t& other_triangle_plane, const Line_t& line, double& min, double& max);
     bool            do_triangles_intersect                          (const Triangle_t& T0, const Triangle_t& T1);                               //
+    double          calc_projection                                 (const Line_t& line, const Line_t& edge);
 
 //================================================================================================================================================
 
