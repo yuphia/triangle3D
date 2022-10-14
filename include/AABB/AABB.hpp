@@ -11,7 +11,8 @@ struct AABB_t
     Point_t pMin;
     Point_t pMax;
 
-    AABB_t (const Triangle_t& triangle);
+    AABB_t (const Triangle_t& triangle) : pMin {triangle.get_min_point()}, pMax {triangle.get_max_point()} {}
+
     static bool overlap (const AABB_t& lhs, const AABB_t& rhs)
     {   
         bool are_overlapping =                    lhs.pMax.x - rhs.pMin.x >= 0 && rhs.pMax.x - lhs.pMin.x >= 0;

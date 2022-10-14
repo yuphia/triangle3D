@@ -15,15 +15,24 @@ struct Point_t
     
     Degeneracy_t degeneracy = Degeneracy_t::POIZON;
 
-
-    Point_t (const double x_, const double y_, const double z_);
     Point_t ()
     {
         degeneracy = Degeneracy_t::INVALID;
     };
 
+    Point_t (const double x_, const double y_, const double z_) : x(x_), y(y_), z(z_) 
+    {
+        if (std::isnan(x) || std::isnan(y) || std::isnan(z))
+            degeneracy = Degeneracy_t::INVALID;
+        else
+            degeneracy = Degeneracy_t::NONE;
+    }
 
-    bool operator== (const Point_t& rhs) const;
+    bool operator== (const Point_t& rhs) const
+    {
+        return (equal_eps (x, rhs.x) && equal_eps (y, rhs.y) && equal_eps (z, rhs.z));
+    }
+
 };
 
 }

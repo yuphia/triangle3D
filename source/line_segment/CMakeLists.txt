@@ -1,1 +1,0 @@
-add_library(line_segment line_segment.cpp)
