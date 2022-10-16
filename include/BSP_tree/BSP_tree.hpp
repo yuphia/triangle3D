@@ -9,6 +9,7 @@ namespace geometry
 {
 
 using AABB_Triag_index = std::pair <AABB_joint_Triangle_t, int>;
+using Find_res_set_bool_t = std::pair <std::vector<AABB_Triag_index>::iterator, bool>;
 
 class BSP_tree_node
 {
@@ -16,7 +17,7 @@ private:
     std::vector<AABB_Triag_index> front;
     std::vector<AABB_Triag_index> back;
 
-    std::vector<AABB_Triag_index>::iterator find_splitter (std::vector<AABB_Triag_index>& candidates, bool& found_splitter);
+    Find_res_set_bool_t find_splitter (std::vector<AABB_Triag_index>& candidates);
     int bisect_and_print_intersected (std::vector<AABB_Triag_index>& candidates, const AABB_Triag_index& splitter, 
                                       std::unordered_set<int>& already_intersected, bool& does_splitter_intersect);
 

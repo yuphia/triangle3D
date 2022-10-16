@@ -38,7 +38,7 @@ public:
         return AABB_t::overlap (lhs.aabb, rhs.aabb);
     }
 
-    AABB_t& get_AABB()
+    const AABB_t& get_AABB() &
     {
         return aabb;
     }

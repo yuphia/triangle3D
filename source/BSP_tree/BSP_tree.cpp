@@ -31,7 +31,9 @@ void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::un
     bool does_splitter_intersect = false;
 
     bool found_splitter = false;
-    auto it = find_splitter (candidates, found_splitter);
+    auto it_and_bool = find_splitter (candidates);
+
+    found_splitter = it_and_bool.second;
 
     if (!found_splitter)
     {
@@ -39,9 +41,9 @@ void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::un
         return;
     }
 
-    AABB_Triag_index splitter = *it;
+    AABB_Triag_index splitter = *(it_and_bool.first);
 
-    candidates.erase (it);
+    candidates.erase (it_and_bool.first);
 
     intersected += bisect_and_print_intersected (candidates, splitter, already_intersected, does_splitter_intersect);
 
@@ -67,8 +69,9 @@ void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::un
 
 }
 
-std::vector<AABB_Triag_index>::iterator BSP_tree_node::find_splitter (std::vector<AABB_Triag_index>& candidates, bool& found_splitter)
+Find_res_set_bool_t BSP_tree_node::find_splitter (std::vector<AABB_Triag_index>& candidates)
 {
+    bool found_splitter = false;
     auto degeneracy_check = [](AABB_Triag_index x) {return x.first.triangle.degeneracy == Degeneracy_t::NONE;};
 
     auto it = std::find_if (candidates.begin(), candidates.end(), degeneracy_check);
@@ -76,7 +79,9 @@ std::vector<AABB_Triag_index>::iterator BSP_tree_node::find_splitter (std::vecto
     if (it != candidates.end())
         found_splitter = true;
 
-    return it;
+    auto pair = std::make_pair (it, found_splitter);    
+
+    return pair;
 }
 
 int BSP_tree_node::bisect_and_print_intersected (std::vector<AABB_Triag_index>& candidates, const AABB_Triag_index& splitter, 

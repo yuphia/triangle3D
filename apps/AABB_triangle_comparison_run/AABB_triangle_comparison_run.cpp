@@ -46,8 +46,10 @@ int main()
                     is_intersected_at_all = true;
 
                     triangle_vector_intersected.push_back (*list_iter);
-                    triangle_list_unintersected.erase (list_iter);   
-                    break;
+                    
+                    auto it_to_erase = list_iter;
+                    ++list_iter;
+                    triangle_list_unintersected.erase (it_to_erase);   
                 }
                 else
                     ++list_iter;
