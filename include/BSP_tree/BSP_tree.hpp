@@ -3,6 +3,7 @@
 #include "Triangle_intersection_algorithm/Triangle_intersection_algorithm.hpp"
 #include <vector>
 #include <unordered_set>
+#include <set>
 #include <list>
 
 namespace geometry
@@ -52,8 +53,9 @@ bool check_intersection_with_all_unintersected (AABB_Triag_index& x,
                                                 std::list<AABB_Triag_index>& triangle_list_unintersected,
                                                 std::vector<AABB_Triag_index> triangle_vector_intersected,
                                                 std::unordered_set<int>& already_intersected);
-bool check_intersection_with_intersected (AABB_Triag_index& x, 
+bool check_intersection_with_intersected (const AABB_Triag_index& x, 
                                           std::list<AABB_Triag_index>& triangle_list_unintersected,
                                           std::vector<AABB_Triag_index> triangle_vector_intersected,
                                           std::unordered_set<int>& already_intersected);
+                                          
 } // geometry

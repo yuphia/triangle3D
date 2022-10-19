@@ -5,18 +5,13 @@
 namespace geometry
 {
 
-struct
-{
-    bool operator()(const AABB_Triag_index &lhs, const AABB_Triag_index &rhs) 
-    {
-        return lhs.second < rhs.second; 
-    }
-} custom_less;
-
 void BSP_tree::run_algo ()
 {
     root.run_algo (candidates, already_intersected);
-    for (auto x : already_intersected)
+
+    std::set <int> result {already_intersected.begin(), already_intersected.end()};
+
+    for (auto x : result)
     {
         std::cout << x << std::endl;
     }
@@ -27,7 +22,7 @@ void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::un
     if (candidates.size() <= 1)
         return;
 
-    int intersected = 0;
+    size_t intersected = 0;
     bool does_splitter_intersect = false;
 
     bool found_splitter = false;
@@ -53,10 +48,9 @@ void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::un
         already_intersected.insert (splitter.second);
     }
 
-    if ((static_cast<int> (candidates.size())/2 < intersected) ||
-        ((static_cast<int> (front.size()) - 150 < intersected) && (static_cast<int>  (back.size()) - 150 < intersected)))
+    if ((candidates.size()/2 < intersected) ||
+        ((front.size() - 150 < intersected) && (back.size() - 150 < intersected)))
     {  
-        //std::cout << "asdasd" << std::endl;
         run_algo_n_squared (candidates, already_intersected);
         return;
     }
@@ -79,9 +73,7 @@ Find_res_set_bool_t BSP_tree_node::find_splitter (std::vector<AABB_Triag_index>&
     if (it != candidates.end())
         found_splitter = true;
 
-    auto pair = std::make_pair (it, found_splitter);    
-
-    return pair;
+    return {it, found_splitter};
 }
 
 int BSP_tree_node::bisect_and_print_intersected (std::vector<AABB_Triag_index>& candidates, const AABB_Triag_index& splitter, 
@@ -92,19 +84,18 @@ int BSP_tree_node::bisect_and_print_intersected (std::vector<AABB_Triag_index>& 
                             splitter.first.triangle.points[1], 
                             splitter.first.triangle.points[2]};
 
-    static int i = 0;
 
     for (auto& t : candidates)
     {
-        if (signed_distance (t.first.triangle.points[0], splitter_plane) < -EPS && 
-            signed_distance (t.first.triangle.points[1], splitter_plane) < -EPS &&
-            signed_distance (t.first.triangle.points[2], splitter_plane) < -EPS)
+        if  (
+             is_triangle_in_negative_halfspace_relative_to_plane (t.first.triangle, splitter_plane)
+            )
         {
             back.push_back (t);
         }
-        else if (signed_distance (t.first.triangle.points[0], splitter_plane) > EPS &&
-                 signed_distance (t.first.triangle.points[1], splitter_plane) > EPS &&
-                 signed_distance (t.first.triangle.points[2], splitter_plane) > EPS)
+        else if (
+                 is_triangle_in_positive_halfspace_relative_to_plane (t.first.triangle, splitter_plane)
+                )
         {
             front.push_back(t);
         }
@@ -123,7 +114,6 @@ int BSP_tree_node::bisect_and_print_intersected (std::vector<AABB_Triag_index>& 
                     does_splitter_intersect = true;
                 }
             }
-            else i++;
         }
     }
 
@@ -132,7 +122,6 @@ int BSP_tree_node::bisect_and_print_intersected (std::vector<AABB_Triag_index>& 
 
 void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::unordered_set<int>& already_intersected)
 {
-    std::sort (triangles.begin(), triangles.end(), custom_less);
     assert (static_cast<bool> (std::cin));
 
     std::list<AABB_Triag_index> triangle_list_unintersected;
@@ -194,7 +183,7 @@ bool check_intersection_with_all_unintersected (AABB_Triag_index& x,
     return is_intersected_at_all;
 }
 
-bool check_intersection_with_intersected (AABB_Triag_index& x, 
+bool check_intersection_with_intersected (const AABB_Triag_index& x, 
                                           std::list<AABB_Triag_index>& triangle_list_unintersected,
                                           std::vector<AABB_Triag_index> triangle_vector_intersected,
                                           std::unordered_set<int>& already_intersected)

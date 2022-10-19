@@ -20,6 +20,8 @@ namespace geometry
     void            compute_triangle_projection_interval            (const Triangle_t& triangle, const Plane_t& other_triangle_plane, const Line_t& line, double& min, double& max);
     bool            do_triangles_intersect                          (const Triangle_t& T0, const Triangle_t& T1);                               //
     double          calc_projection                                 (const Line_t& line, const Line_t& edge);
+    bool is_triangle_in_positive_halfspace_relative_to_plane (const Triangle_t& t, const Plane_t& plane);
+    bool is_triangle_in_negative_halfspace_relative_to_plane (const Triangle_t& t, const Plane_t& plane);
 
 //================================================================================================================================================
 

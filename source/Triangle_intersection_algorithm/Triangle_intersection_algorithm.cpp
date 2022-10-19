@@ -141,18 +141,13 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
         return select_and_run_algo_for_degenerated_triangles (T0, T1);
 
     Plane_t T0_plane {T0.points[0], T0.points[1], T0.points[2]};
-    if ( ( signed_distance(T1.points[0], T0_plane) > EPS 
-           && 
-           signed_distance(T1.points[1], T0_plane) > EPS 
-           && 
-           signed_distance(T1.points[2], T0_plane) > EPS   
+    if  ( 
+         (
+         is_triangle_in_positive_halfspace_relative_to_plane (T1, T0_plane)
          )   
          ||
-         ( signed_distance(T1.points[0], T0_plane) < -EPS 
-           && 
-           signed_distance(T1.points[1], T0_plane) < -EPS 
-           && 
-           signed_distance(T1.points[2], T0_plane) < -EPS   
+         ( 
+         is_triangle_in_negative_halfspace_relative_to_plane (T1, T0_plane)
          ) 
         ) 
     {
@@ -168,20 +163,16 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
             return false;
     }
 
-    if ( ( signed_distance(T0.points[0], T1_plane) > EPS
-           && 
-           signed_distance(T0.points[1], T1_plane) > EPS
-           && 
-           signed_distance(T0.points[2], T1_plane) > EPS
-         ) 
-         ||
-         ( signed_distance(T0.points[0], T1_plane) < -EPS 
-           && 
-           signed_distance(T0.points[1], T1_plane) < -EPS 
-           && 
-           signed_distance(T0.points[2], T1_plane) < -EPS
-         ) 
-       ) {
+    if ( 
+        (
+        is_triangle_in_positive_halfspace_relative_to_plane (T0, T1_plane)
+        ) 
+        ||
+        (
+        is_triangle_in_negative_halfspace_relative_to_plane (T0, T1_plane)
+        ) 
+       ) 
+    {
         return false;
     }
 
@@ -196,6 +187,29 @@ bool do_triangles_intersect (const Triangle_t& T0, const Triangle_t& T1) {
         return false;
 
     return true;
+}
+
+bool is_triangle_in_positive_halfspace_relative_to_plane (const Triangle_t& t, const Plane_t& plane)
+{
+    return  (
+            signed_distance(t.points[0], plane) > EPS
+            && 
+            signed_distance(t.points[1], plane) > EPS
+            && 
+            signed_distance(t.points[2], plane) > EPS
+            );
+}
+
+bool is_triangle_in_negative_halfspace_relative_to_plane (const Triangle_t& t, const Plane_t& plane)
+{
+    return 
+            (
+            signed_distance(t.points[0], plane) < -EPS 
+            && 
+            signed_distance(t.points[1], plane) < -EPS 
+            && 
+            signed_distance(t.points[2], plane) < -EPS
+            );
 }
 //================================================================================================================================================
 

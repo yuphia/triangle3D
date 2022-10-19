@@ -4,6 +4,18 @@
 #include <list>
 #include <cassert>
 
+namespace
+{
+    struct pair_less
+    {
+        const bool operator() (const std::pair <geometry::Triangle_t, size_t> &lhs, 
+                               const std::pair <geometry::Triangle_t, size_t> &rhs)
+        {
+            return rhs.second > lhs.second;
+        }
+    };
+}
+
 int main()
 {
     size_t amount = 0;
@@ -77,6 +89,7 @@ int main()
         }
     }
 
+    std::sort (triangle_vector_intersected.begin(), triangle_vector_intersected.end(), pair_less{});
     for (auto x: triangle_vector_intersected)
     {
         std::cout << x.second << "\n";

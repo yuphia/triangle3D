@@ -167,6 +167,11 @@ foreach (TEST ${TESTS})
     target_link_libraries (${TEST} PRIVATE ${LIBS})
     
     get_target_property(OUT ${TEST} LINK_LIBRARIES)
+    get_target_property(OUT_OPTIONS ${TEST} LINK_OPTIONS)
+    
+    foreach(OUT_OPTION ${OUT_OPTIONS})
+    message (STATUS "     linked option: ${OUT_OPTION}")
+    endforeach()
     
     foreach(LIB ${OUT})
     message(STATUS "    linked: ${LIB}")
