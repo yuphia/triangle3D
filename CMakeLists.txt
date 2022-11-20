@@ -3,11 +3,6 @@ cmake_minimum_required (VERSION 3.14)
 
 project(triangle_proj VERSION 1.0)
 
-find_package(glm CONFIG REQUIRED)
-find_package(glfw3 CONFIG REQUIRED)
-find_package(Vulkan REQUIRED)
-find_program(glslc_executable NAMES glslc HINTS Vulkan::glslc)
-
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
 if(EXISTS "${LOC_PATH}")
 message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file).
@@ -115,6 +110,9 @@ foreach(LIB ${LIBS})
     #target_compile_options(${LIB} PRIVATE "${WARNS};${FLAGS}")
 
     target_include_directories(${LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    #    target_link_libraries(${LIB} PUBLIC )
+
+
     
     get_property(dirs TARGET ${LIB} PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
     foreach(dir ${dirs})
@@ -211,72 +209,5 @@ foreach(APP ${APPS})
 
     message (STATUS "")
 endforeach()
- 
-#///////////////////////////////////////////////////////////////////////////////////////
 
-add_subdirectory(Vulkan)
-
-foreach(VULKAN_LIB ${VULKAN_LIBS})
-    target_compile_features(${VULKAN_LIB} PRIVATE cxx_std_17)
-
-    target_include_directories(${VULKAN_LIB} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Vulkan/include ${Vulkan_INCLUDE_DIRS})
-    target_link_libraries(${VULKAN_LIB} PRIVATE glm::glm glfw ${Vulkan_LIBRARIES}) 
-endforeach()
-
-
-file(GLOB_RECURSE GLSL_SOURCE_FILES
-  "Vulkan/shaders/*.frag"
-  "Vulkan/shaders/*.vert"
-)
- 
-foreach(GLSL ${GLSL_SOURCE_FILES})
-    get_filename_component(FILE_NAME ${GLSL} NAME)
-    set(SPIRV "../Vulkan/shaders/${FILE_NAME}.spv")
-    add_custom_command(
-        OUTPUT ${SPIRV}
-        COMMAND ${glslc_executable} ${GLSL} -o ${SPIRV}
-        DEPENDS ${GLSL})
-    list(APPEND SPIRV_BINARY_FILES ${SPIRV})
-endforeach(GLSL)
- 
-add_custom_target(
-    Shaders
-    DEPENDS ${SPIRV_BINARY_FILES}
-)
-
-message (STATUS "\n////////////////")
-message (STATUS "Collected VISUAL_APPS: ${VISUALS}")
-
-foreach(VISUAL ${VISUALS})
-    message (STATUS "visual_app: ${VISUAL}")
-
-    target_compile_features(${VISUAL} PRIVATE cxx_std_17)
-
-    add_dependencies(${VISUAL} Shaders)
-
-    target_include_directories (${VISUAL} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Vulkan/include ${Vulkan_INCLUDE_DIRS})
-    target_link_libraries(${VISUAL} PRIVATE glm::glm glfw ${Vulkan_LIBRARIES})
-    target_link_libraries(${VISUAL} PRIVATE ${VULKAN_LIBS})      
-    
-    
-    
-    #target_link_options(${VISUAL} PRIVATE "${FLAGS}")
-    #target_compile_options(${VISUAL} PRIVATE "${WARNS};${FLAGS}")
-
-    target_include_directories(${VISUAL} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-    target_link_libraries(${VISUAL} PRIVATE ${LIBS})
-
-    get_property(dirs TARGET ${VISUAL} PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
-    foreach(dir ${dirs})
-        message(STATUS "    ${VISUAL} includes dir = '${dir}'")    
-    endforeach()
-
-    get_target_property(OUT ${VISUAL} LINK_LIBRARIES)
-    
-    foreach(LIB ${OUT})
-        message(STATUS "    linked: ${LIB}")
-    endforeach()
-
-    message (STATUS "")
-endforeach()
-
+add_subdirectory(gen-test)
