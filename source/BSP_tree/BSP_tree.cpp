@@ -175,7 +175,6 @@ bool check_intersection_with_all_unintersected (AABB_Triag_index& x,
         else
             ++list_iter;
     }
-
     return is_intersected_at_all;
 }
 
@@ -204,7 +203,6 @@ bool check_intersection_with_intersected (const AABB_Triag_index& x,
             }
         }
     }
-
     return is_intersected_at_all;
 }
 
