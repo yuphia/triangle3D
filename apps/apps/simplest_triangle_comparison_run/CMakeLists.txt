@@ -1,1 +1,0 @@
-add_executable (simplest_triangle_comparison_run simplest_triangle_comparison_run.cpp)
