@@ -105,8 +105,8 @@ int BSP_tree_node::bisect_and_print_intersected (std::vector<AABB_Triag_index>& 
             front.push_back (t);
             
             intersected++;
-            auto it_hash = already_intersected.find (t.second);
-            if (it_hash == already_intersected.end() && AABB_joint_Triangle_t::overlap_AABB (splitter.first, t.first))
+            //auto it_hash = already_intersected.find (t.second);
+            if (AABB_joint_Triangle_t::overlap_AABB (splitter.first, t.first))
             {
                 if (do_triangles_intersect (splitter.first.triangle, t.first.triangle))
                 {
@@ -179,7 +179,6 @@ bool check_intersection_with_all_unintersected (AABB_Triag_index& x,
         else
             ++list_iter;
     }
-
     return is_intersected_at_all;
 }
 
@@ -208,7 +207,6 @@ bool check_intersection_with_intersected (const AABB_Triag_index& x,
             }
         }
     }
-
     return is_intersected_at_all;
 }
 
