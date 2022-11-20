@@ -1,7 +1,7 @@
 #pragma once
 
-#include "point/point.hpp"
-#include "common_math_operations/common_math_operations.hpp"
+#include "../point/point.hpp"
+#include "../common_math_operations/common_math_operations.hpp"
 
 namespace geometry
 {

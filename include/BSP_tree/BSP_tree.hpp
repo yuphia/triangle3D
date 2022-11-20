@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Triangle_intersection_algorithm/Triangle_intersection_algorithm.hpp"
+#include "../Triangle_intersection_algorithm/Triangle_intersection_algorithm.hpp"
 #include <vector>
 #include <unordered_set>
 #include <set>
@@ -10,6 +10,7 @@ namespace geometry
 {
 
 using AABB_Triag_index = std::pair <AABB_joint_Triangle_t, int>;
+using AABB_Triag_index_intersected = std::pair <geometry::AABB_Triag_index, bool>; 
 using Find_res_set_bool_t = std::pair <std::vector<AABB_Triag_index>::iterator, bool>;
 
 class BSP_tree_node
@@ -45,7 +46,7 @@ public:
         }
     };
     
-    void run_algo ();
+    std::vector<int> run_algo ();
 };
 
 void run_algo_n_squared (std::vector<AABB_Triag_index> triangles, std::unordered_set<int>& already_intersected);

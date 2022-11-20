@@ -1,7 +1,7 @@
 #pragma once
 
-#include "vector_geom/vector_geom.hpp"
-#include "line_segment/line_segment.hpp"
+#include "../vector_geom/vector_geom.hpp"
+#include "../line_segment/line_segment.hpp"
 
 namespace geometry
 {

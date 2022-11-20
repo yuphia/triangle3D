@@ -5,16 +5,13 @@
 namespace geometry
 {
 
-void BSP_tree::run_algo ()
+std::vector<int> BSP_tree::run_algo ()
 {
     root.run_algo (candidates, already_intersected);
 
-    std::set <int> result {already_intersected.begin(), already_intersected.end()};
+    std::vector<int> result = {already_intersected.begin(), already_intersected.end()};
 
-    for (auto x : result)
-    {
-        std::cout << x << std::endl;
-    }
+    return result;
 }
 
 void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::unordered_set<int>& already_intersected)
@@ -59,7 +56,7 @@ void BSP_tree_node::run_algo (std::vector<AABB_Triag_index>& candidates, std::un
     BSP_tree_node  back_node;
 
     front_node.run_algo (front, already_intersected);
-    back_node. run_algo (back, already_intersected);
+    back_node.run_algo  (back, already_intersected);
 
 }
 
@@ -105,8 +102,7 @@ int BSP_tree_node::bisect_and_print_intersected (std::vector<AABB_Triag_index>& 
             front.push_back (t);
             
             intersected++;
-            auto it_hash = already_intersected.find (t.second);
-            if (it_hash == already_intersected.end() && AABB_joint_Triangle_t::overlap_AABB (splitter.first, t.first))
+            if (AABB_joint_Triangle_t::overlap_AABB (splitter.first, t.first))
             {
                 if (do_triangles_intersect (splitter.first.triangle, t.first.triangle))
                 {
