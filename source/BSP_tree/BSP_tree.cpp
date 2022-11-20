@@ -105,8 +105,7 @@ int BSP_tree_node::bisect_and_print_intersected (std::vector<AABB_Triag_index>& 
             front.push_back (t);
             
             intersected++;
-            auto it_hash = already_intersected.find (t.second);
-            if (it_hash == already_intersected.end() && AABB_joint_Triangle_t::overlap_AABB (splitter.first, t.first))
+            if (AABB_joint_Triangle_t::overlap_AABB (splitter.first, t.first))
             {
                 if (do_triangles_intersect (splitter.first.triangle, t.first.triangle))
                 {
