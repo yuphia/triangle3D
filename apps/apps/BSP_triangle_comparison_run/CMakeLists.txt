@@ -1,0 +1,1 @@
+add_executable (BSP_triangle_comparison_run BSP_triangle_comparison_run.cpp)
