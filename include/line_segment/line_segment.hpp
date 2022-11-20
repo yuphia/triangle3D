@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../point/point.hpp"
-#include "../vector_geom/vector_geom.hpp"
+#include "point/point.hpp"
+#include "vector_geom/vector_geom.hpp"
 
 
 namespace geometry

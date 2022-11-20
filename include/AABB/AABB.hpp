@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../triangle/triangle.hpp"
+#include "triangle/triangle.hpp"
 #include <algorithm>
 
 namespace geometry
